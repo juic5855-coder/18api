@@ -7,616 +7,739 @@
     {
         "id": "tvshows",
         "name": "All Series",
-        "url": "https://hentaimama.io/tvshows/"
+        "url": "https://hentaimama.io/tvshows/",
+        "grid": "portrait"
     },
     {
         "id": "uncensored",
         "name": "Uncensored",
-        "url": "https://hentaimama.io/genre/uncensored/"
+        "url": "https://hentaimama.io/genre/uncensored/",
+        "grid": "portrait"
     },
     {
         "id": "3d",
         "name": "3D",
-        "url": "https://hentaimama.io/genre/3d/"
+        "url": "https://hentaimama.io/genre/3d/",
+        "grid": "portrait"
     },
     {
         "id": "action",
         "name": "Action",
-        "url": "https://hentaimama.io/genre/action/"
+        "url": "https://hentaimama.io/genre/action/",
+        "grid": "portrait"
     },
     {
         "id": "adventure",
         "name": "Adventure",
-        "url": "https://hentaimama.io/genre/adventure/"
+        "url": "https://hentaimama.io/genre/adventure/",
+        "grid": "portrait"
     },
     {
         "id": "ahegao",
         "name": "Ahegao",
-        "url": "https://hentaimama.io/genre/ahegao/"
+        "url": "https://hentaimama.io/genre/ahegao/",
+        "grid": "portrait"
     },
     {
         "id": "anal",
         "name": "Anal",
-        "url": "https://hentaimama.io/genre/anal/"
+        "url": "https://hentaimama.io/genre/anal/",
+        "grid": "portrait"
     },
     {
         "id": "animal-ears",
         "name": "Animal Girls",
-        "url": "https://hentaimama.io/genre/animal-ears/"
+        "url": "https://hentaimama.io/genre/animal-ears/",
+        "grid": "portrait"
     },
     {
         "id": "armpit-fetish",
         "name": "Armpit fetish",
-        "url": "https://hentaimama.io/genre/armpit-fetish/"
+        "url": "https://hentaimama.io/genre/armpit-fetish/",
+        "grid": "portrait"
     },
     {
         "id": "bdsm",
         "name": "BDSM",
-        "url": "https://hentaimama.io/genre/bdsm/"
+        "url": "https://hentaimama.io/genre/bdsm/",
+        "grid": "portrait"
     },
     {
         "id": "blackmail",
         "name": "Blackmail",
-        "url": "https://hentaimama.io/genre/blackmail/"
+        "url": "https://hentaimama.io/genre/blackmail/",
+        "grid": "portrait"
     },
     {
         "id": "blonde",
         "name": "Blonde",
-        "url": "https://hentaimama.io/genre/blonde/"
+        "url": "https://hentaimama.io/genre/blonde/",
+        "grid": "portrait"
     },
     {
         "id": "blowjob",
         "name": "Blowjob",
-        "url": "https://hentaimama.io/genre/blowjob/"
+        "url": "https://hentaimama.io/genre/blowjob/",
+        "grid": "portrait"
     },
     {
         "id": "bondage",
         "name": "Bondage",
-        "url": "https://hentaimama.io/genre/bondage/"
+        "url": "https://hentaimama.io/genre/bondage/",
+        "grid": "portrait"
     },
     {
         "id": "brainwashed",
         "name": "Brainwashed",
-        "url": "https://hentaimama.io/genre/brainwashed/"
+        "url": "https://hentaimama.io/genre/brainwashed/",
+        "grid": "portrait"
     },
     {
         "id": "cat-girl",
         "name": "Cat Girl",
-        "url": "https://hentaimama.io/genre/cat-girl/"
+        "url": "https://hentaimama.io/genre/cat-girl/",
+        "grid": "portrait"
     },
     {
         "id": "comedy",
         "name": "Comedy",
-        "url": "https://hentaimama.io/genre/comedy/"
+        "url": "https://hentaimama.io/genre/comedy/",
+        "grid": "portrait"
     },
     {
         "id": "condom",
         "name": "Condom",
-        "url": "https://hentaimama.io/genre/condom/"
+        "url": "https://hentaimama.io/genre/condom/",
+        "grid": "portrait"
     },
     {
         "id": "cosplay",
         "name": "Cosplay",
-        "url": "https://hentaimama.io/genre/cosplay/"
+        "url": "https://hentaimama.io/genre/cosplay/",
+        "grid": "portrait"
     },
     {
         "id": "creampie",
         "name": "Creampie",
-        "url": "https://hentaimama.io/genre/creampie/"
+        "url": "https://hentaimama.io/genre/creampie/",
+        "grid": "portrait"
     },
     {
         "id": "cross-dressing",
         "name": "Cross-dressing",
-        "url": "https://hentaimama.io/genre/cross-dressing/"
+        "url": "https://hentaimama.io/genre/cross-dressing/",
+        "grid": "portrait"
     },
     {
         "id": "cunnilingus",
         "name": "Cunnilingus",
-        "url": "https://hentaimama.io/genre/cunnilingus/"
+        "url": "https://hentaimama.io/genre/cunnilingus/",
+        "grid": "portrait"
     },
     {
         "id": "cutefunny",
         "name": "Cute & Funny",
-        "url": "https://hentaimama.io/genre/cutefunny/"
+        "url": "https://hentaimama.io/genre/cutefunny/",
+        "grid": "portrait"
     },
     {
         "id": "dark-skin",
         "name": "Dark Skin",
-        "url": "https://hentaimama.io/genre/dark-skin/"
+        "url": "https://hentaimama.io/genre/dark-skin/",
+        "grid": "portrait"
     },
     {
         "id": "deepthroat",
         "name": "DeepThroat",
-        "url": "https://hentaimama.io/genre/deepthroat/"
+        "url": "https://hentaimama.io/genre/deepthroat/",
+        "grid": "portrait"
     },
     {
         "id": "demi-human",
         "name": "Demi-Human",
-        "url": "https://hentaimama.io/genre/demi-human/"
+        "url": "https://hentaimama.io/genre/demi-human/",
+        "grid": "portrait"
     },
     {
         "id": "demons",
         "name": "Demons",
-        "url": "https://hentaimama.io/genre/demons/"
+        "url": "https://hentaimama.io/genre/demons/",
+        "grid": "portrait"
     },
     {
         "id": "doctor",
         "name": "Doctor",
-        "url": "https://hentaimama.io/genre/doctor/"
+        "url": "https://hentaimama.io/genre/doctor/",
+        "grid": "portrait"
     },
     {
         "id": "domination",
         "name": "Domination",
-        "url": "https://hentaimama.io/genre/domination/"
+        "url": "https://hentaimama.io/genre/domination/",
+        "grid": "portrait"
     },
     {
         "id": "double-penatration",
         "name": "Double Penetration",
-        "url": "https://hentaimama.io/genre/double-penatration/"
+        "url": "https://hentaimama.io/genre/double-penatration/",
+        "grid": "portrait"
     },
     {
         "id": "drama",
         "name": "Drama",
-        "url": "https://hentaimama.io/genre/drama/"
+        "url": "https://hentaimama.io/genre/drama/",
+        "grid": "portrait"
     },
     {
         "id": "dubbed",
         "name": "Dubbed",
-        "url": "https://hentaimama.io/genre/dubbed/"
+        "url": "https://hentaimama.io/genre/dubbed/",
+        "grid": "portrait"
     },
     {
         "id": "ecchi",
         "name": "Ecchi",
-        "url": "https://hentaimama.io/genre/ecchi/"
+        "url": "https://hentaimama.io/genre/ecchi/",
+        "grid": "portrait"
     },
     {
         "id": "elf",
         "name": "Elf",
-        "url": "https://hentaimama.io/genre/elf/"
+        "url": "https://hentaimama.io/genre/elf/",
+        "grid": "portrait"
     },
     {
         "id": "facesitting",
         "name": "Facesitting",
-        "url": "https://hentaimama.io/genre/facesitting/"
+        "url": "https://hentaimama.io/genre/facesitting/",
+        "grid": "portrait"
     },
     {
         "id": "facial",
         "name": "Facial",
-        "url": "https://hentaimama.io/genre/facial/"
+        "url": "https://hentaimama.io/genre/facial/",
+        "grid": "portrait"
     },
     {
         "id": "family",
         "name": "Family",
-        "url": "https://hentaimama.io/genre/family/"
+        "url": "https://hentaimama.io/genre/family/",
+        "grid": "portrait"
     },
     {
         "id": "fantasy",
         "name": "Fantasy",
-        "url": "https://hentaimama.io/genre/fantasy/"
+        "url": "https://hentaimama.io/genre/fantasy/",
+        "grid": "portrait"
     },
     {
         "id": "female-doctor",
         "name": "Female Doctor",
-        "url": "https://hentaimama.io/genre/female-doctor/"
+        "url": "https://hentaimama.io/genre/female-doctor/",
+        "grid": "portrait"
     },
     {
         "id": "female-teacher",
         "name": "Female Teacher",
-        "url": "https://hentaimama.io/genre/female-teacher/"
+        "url": "https://hentaimama.io/genre/female-teacher/",
+        "grid": "portrait"
     },
     {
         "id": "femdom",
         "name": "Femdom",
-        "url": "https://hentaimama.io/genre/femdom/"
+        "url": "https://hentaimama.io/genre/femdom/",
+        "grid": "portrait"
     },
     {
         "id": "filmed",
         "name": "Filmed",
-        "url": "https://hentaimama.io/genre/filmed/"
+        "url": "https://hentaimama.io/genre/filmed/",
+        "grid": "portrait"
     },
     {
         "id": "fisting",
         "name": "Fisting",
-        "url": "https://hentaimama.io/genre/fisting/"
+        "url": "https://hentaimama.io/genre/fisting/",
+        "grid": "portrait"
     },
     {
         "id": "footjob",
         "name": "Footjob",
-        "url": "https://hentaimama.io/genre/footjob/"
+        "url": "https://hentaimama.io/genre/footjob/",
+        "grid": "portrait"
     },
     {
         "id": "furry",
         "name": "Furry",
-        "url": "https://hentaimama.io/genre/furry/"
+        "url": "https://hentaimama.io/genre/furry/",
+        "grid": "portrait"
     },
     {
         "id": "futanari",
         "name": "Futanari",
-        "url": "https://hentaimama.io/genre/futanari/"
+        "url": "https://hentaimama.io/genre/futanari/",
+        "grid": "portrait"
     },
     {
         "id": "gangbang",
         "name": "Gangbang",
-        "url": "https://hentaimama.io/genre/gangbang/"
+        "url": "https://hentaimama.io/genre/gangbang/",
+        "grid": "portrait"
     },
     {
         "id": "gyaru",
         "name": "Gyaru",
-        "url": "https://hentaimama.io/genre/gyaru/"
+        "url": "https://hentaimama.io/genre/gyaru/",
+        "grid": "portrait"
     },
     {
         "id": "hand-job",
         "name": "Hand Job",
-        "url": "https://hentaimama.io/genre/hand-job/"
+        "url": "https://hentaimama.io/genre/hand-job/",
+        "grid": "portrait"
     },
     {
         "id": "harem",
         "name": "Harem",
-        "url": "https://hentaimama.io/genre/harem/"
+        "url": "https://hentaimama.io/genre/harem/",
+        "grid": "portrait"
     },
     {
         "id": "historical",
         "name": "Historical",
-        "url": "https://hentaimama.io/genre/historical/"
+        "url": "https://hentaimama.io/genre/historical/",
+        "grid": "portrait"
     },
     {
         "id": "horny-slut",
         "name": "Horny Slut",
-        "url": "https://hentaimama.io/genre/horny-slut/"
+        "url": "https://hentaimama.io/genre/horny-slut/",
+        "grid": "portrait"
     },
     {
         "id": "horror",
         "name": "Horror",
-        "url": "https://hentaimama.io/genre/horror/"
+        "url": "https://hentaimama.io/genre/horror/",
+        "grid": "portrait"
     },
     {
         "id": "housewife",
         "name": "Housewife",
-        "url": "https://hentaimama.io/genre/housewife/"
+        "url": "https://hentaimama.io/genre/housewife/",
+        "grid": "portrait"
     },
     {
         "id": "humiliation",
         "name": "Humiliation",
-        "url": "https://hentaimama.io/genre/humiliation/"
+        "url": "https://hentaimama.io/genre/humiliation/",
+        "grid": "portrait"
     },
     {
         "id": "incest",
         "name": "Incest",
-        "url": "https://hentaimama.io/genre/incest/"
+        "url": "https://hentaimama.io/genre/incest/",
+        "grid": "portrait"
     },
     {
         "id": "inflation",
         "name": "Inflation",
-        "url": "https://hentaimama.io/genre/inflation/"
+        "url": "https://hentaimama.io/genre/inflation/",
+        "grid": "portrait"
     },
     {
         "id": "internal-cumshot",
         "name": "Internal Cumshot",
-        "url": "https://hentaimama.io/genre/internal-cumshot/"
+        "url": "https://hentaimama.io/genre/internal-cumshot/",
+        "grid": "portrait"
     },
     {
         "id": "lactation",
         "name": "Lactation",
-        "url": "https://hentaimama.io/genre/lactation/"
+        "url": "https://hentaimama.io/genre/lactation/",
+        "grid": "portrait"
     },
     {
         "id": "large-breasts",
         "name": "Large Breasts",
-        "url": "https://hentaimama.io/genre/large-breasts/"
+        "url": "https://hentaimama.io/genre/large-breasts/",
+        "grid": "portrait"
     },
     {
         "id": "magical-girls",
         "name": "Magical Girls",
-        "url": "https://hentaimama.io/genre/magical-girls/"
+        "url": "https://hentaimama.io/genre/magical-girls/",
+        "grid": "portrait"
     },
     {
         "id": "maid",
         "name": "Maid",
-        "url": "https://hentaimama.io/genre/maid/"
+        "url": "https://hentaimama.io/genre/maid/",
+        "grid": "portrait"
     },
     {
         "id": "martial-arts",
         "name": "Martial Arts",
-        "url": "https://hentaimama.io/genre/martial-arts/"
+        "url": "https://hentaimama.io/genre/martial-arts/",
+        "grid": "portrait"
     },
     {
         "id": "masturbation",
         "name": "Masturbation",
-        "url": "https://hentaimama.io/genre/masturbation/"
+        "url": "https://hentaimama.io/genre/masturbation/",
+        "grid": "portrait"
     },
     {
         "id": "megane",
         "name": "Megane",
-        "url": "https://hentaimama.io/genre/megane/"
+        "url": "https://hentaimama.io/genre/megane/",
+        "grid": "portrait"
     },
     {
         "id": "milf",
         "name": "MILF",
-        "url": "https://hentaimama.io/genre/milf/"
+        "url": "https://hentaimama.io/genre/milf/",
+        "grid": "portrait"
     },
     {
         "id": "mind-break",
         "name": "Mind Break",
-        "url": "https://hentaimama.io/genre/mind-break/"
+        "url": "https://hentaimama.io/genre/mind-break/",
+        "grid": "portrait"
     },
     {
         "id": "molestation",
         "name": "Molestation",
-        "url": "https://hentaimama.io/genre/molestation/"
+        "url": "https://hentaimama.io/genre/molestation/",
+        "grid": "portrait"
     },
     {
         "id": "monsters",
         "name": "Monsters",
-        "url": "https://hentaimama.io/genre/monsters/"
+        "url": "https://hentaimama.io/genre/monsters/",
+        "grid": "portrait"
     },
     {
         "id": "nekomimi",
         "name": "Nekomimi",
-        "url": "https://hentaimama.io/genre/nekomimi/"
+        "url": "https://hentaimama.io/genre/nekomimi/",
+        "grid": "portrait"
     },
     {
         "id": "nipple-fuck",
         "name": "Nipple Fuck",
-        "url": "https://hentaimama.io/genre/nipple-fuck/"
+        "url": "https://hentaimama.io/genre/nipple-fuck/",
+        "grid": "portrait"
     },
     {
         "id": "non-japanese",
         "name": "Non-Japanese",
-        "url": "https://hentaimama.io/genre/non-japanese/"
+        "url": "https://hentaimama.io/genre/non-japanese/",
+        "grid": "portrait"
     },
     {
         "id": "ntr",
         "name": "NTR",
-        "url": "https://hentaimama.io/genre/ntr/"
+        "url": "https://hentaimama.io/genre/ntr/",
+        "grid": "portrait"
     },
     {
         "id": "nuns",
         "name": "Nuns",
-        "url": "https://hentaimama.io/genre/nuns/"
+        "url": "https://hentaimama.io/genre/nuns/",
+        "grid": "portrait"
     },
     {
         "id": "nurses",
         "name": "Nurses",
-        "url": "https://hentaimama.io/genre/nurses/"
+        "url": "https://hentaimama.io/genre/nurses/",
+        "grid": "portrait"
     },
     {
         "id": "office-ladies",
         "name": "Office Ladies",
-        "url": "https://hentaimama.io/genre/office-ladies/"
+        "url": "https://hentaimama.io/genre/office-ladies/",
+        "grid": "portrait"
     },
     {
         "id": "orc",
         "name": "Orc/Goblin",
-        "url": "https://hentaimama.io/genre/orc/"
+        "url": "https://hentaimama.io/genre/orc/",
+        "grid": "portrait"
     },
     {
         "id": "orgy",
         "name": "Orgy",
-        "url": "https://hentaimama.io/genre/orgy/"
+        "url": "https://hentaimama.io/genre/orgy/",
+        "grid": "portrait"
     },
     {
         "id": "piercing",
         "name": "Piercing",
-        "url": "https://hentaimama.io/genre/piercing/"
+        "url": "https://hentaimama.io/genre/piercing/",
+        "grid": "portrait"
     },
     {
         "id": "police",
         "name": "Police",
-        "url": "https://hentaimama.io/genre/police/"
+        "url": "https://hentaimama.io/genre/police/",
+        "grid": "portrait"
     },
     {
         "id": "pov",
         "name": "POV",
-        "url": "https://hentaimama.io/genre/pov/"
+        "url": "https://hentaimama.io/genre/pov/",
+        "grid": "portrait"
     },
     {
         "id": "pregnant",
         "name": "Pregnant",
-        "url": "https://hentaimama.io/genre/pregnant/"
+        "url": "https://hentaimama.io/genre/pregnant/",
+        "grid": "portrait"
     },
     {
         "id": "princess",
         "name": "Princess",
-        "url": "https://hentaimama.io/genre/princess/"
+        "url": "https://hentaimama.io/genre/princess/",
+        "grid": "portrait"
     },
     {
         "id": "public-sex",
         "name": "Public Sex",
-        "url": "https://hentaimama.io/genre/public-sex/"
+        "url": "https://hentaimama.io/genre/public-sex/",
+        "grid": "portrait"
     },
     {
         "id": "rape",
         "name": "Rape",
-        "url": "https://hentaimama.io/genre/rape/"
+        "url": "https://hentaimama.io/genre/rape/",
+        "grid": "portrait"
     },
     {
         "id": "rim-job",
         "name": "Rim job",
-        "url": "https://hentaimama.io/genre/rim-job/"
+        "url": "https://hentaimama.io/genre/rim-job/",
+        "grid": "portrait"
     },
     {
         "id": "romance",
         "name": "Romance",
-        "url": "https://hentaimama.io/genre/romance/"
+        "url": "https://hentaimama.io/genre/romance/",
+        "grid": "portrait"
     },
     {
         "id": "scat",
         "name": "Scat",
-        "url": "https://hentaimama.io/genre/scat/"
+        "url": "https://hentaimama.io/genre/scat/",
+        "grid": "portrait"
     },
     {
         "id": "school-girls",
         "name": "School Girls",
-        "url": "https://hentaimama.io/genre/school-girls/"
+        "url": "https://hentaimama.io/genre/school-girls/",
+        "grid": "portrait"
     },
     {
         "id": "sci-fi",
         "name": "Sci-Fi",
-        "url": "https://hentaimama.io/genre/sci-fi/"
+        "url": "https://hentaimama.io/genre/sci-fi/",
+        "grid": "portrait"
     },
     {
         "id": "sci-fi-fantasy",
         "name": "Sci-Fi & Fantasy",
-        "url": "https://hentaimama.io/genre/sci-fi-fantasy/"
+        "url": "https://hentaimama.io/genre/sci-fi-fantasy/",
+        "grid": "portrait"
     },
     {
         "id": "shimapan",
         "name": "Shimapan",
-        "url": "https://hentaimama.io/genre/shimapan/"
+        "url": "https://hentaimama.io/genre/shimapan/",
+        "grid": "portrait"
     },
     {
         "id": "short",
         "name": "Short",
-        "url": "https://hentaimama.io/genre/short/"
+        "url": "https://hentaimama.io/genre/short/",
+        "grid": "portrait"
     },
     {
         "id": "shoutacon",
         "name": "Shoutacon",
-        "url": "https://hentaimama.io/genre/shoutacon/"
+        "url": "https://hentaimama.io/genre/shoutacon/",
+        "grid": "portrait"
     },
     {
         "id": "small-breasts",
         "name": "Small Breasts",
-        "url": "https://hentaimama.io/genre/small-breasts/"
+        "url": "https://hentaimama.io/genre/small-breasts/",
+        "grid": "portrait"
     },
     {
         "id": "sports",
         "name": "Sports",
-        "url": "https://hentaimama.io/genre/sports/"
+        "url": "https://hentaimama.io/genre/sports/",
+        "grid": "portrait"
     },
     {
         "id": "squirting",
         "name": "Squirting",
-        "url": "https://hentaimama.io/genre/squirting/"
+        "url": "https://hentaimama.io/genre/squirting/",
+        "grid": "portrait"
     },
     {
         "id": "step-daughter",
         "name": "Step Daughter",
-        "url": "https://hentaimama.io/genre/step-daughter/"
+        "url": "https://hentaimama.io/genre/step-daughter/",
+        "grid": "portrait"
     },
     {
         "id": "step-mother",
         "name": "Step Mother",
-        "url": "https://hentaimama.io/genre/step-mother/"
+        "url": "https://hentaimama.io/genre/step-mother/",
+        "grid": "portrait"
     },
     {
         "id": "step-sister",
         "name": "Step Sister",
-        "url": "https://hentaimama.io/genre/step-sister/"
+        "url": "https://hentaimama.io/genre/step-sister/",
+        "grid": "portrait"
     },
     {
         "id": "stocking",
         "name": "Stocking",
-        "url": "https://hentaimama.io/genre/stocking/"
+        "url": "https://hentaimama.io/genre/stocking/",
+        "grid": "portrait"
     },
     {
         "id": "strap-on",
         "name": "Strap-on",
-        "url": "https://hentaimama.io/genre/strap-on/"
+        "url": "https://hentaimama.io/genre/strap-on/",
+        "grid": "portrait"
     },
     {
         "id": "succubus",
         "name": "Succubus",
-        "url": "https://hentaimama.io/genre/succubus/"
+        "url": "https://hentaimama.io/genre/succubus/",
+        "grid": "portrait"
     },
     {
         "id": "super-power",
         "name": "Super Power",
-        "url": "https://hentaimama.io/genre/super-power/"
+        "url": "https://hentaimama.io/genre/super-power/",
+        "grid": "portrait"
     },
     {
         "id": "supernatural",
         "name": "Supernatural",
-        "url": "https://hentaimama.io/genre/supernatural/"
+        "url": "https://hentaimama.io/genre/supernatural/",
+        "grid": "portrait"
     },
     {
         "id": "swimsuit",
         "name": "Swimsuit",
-        "url": "https://hentaimama.io/genre/swimsuit/"
+        "url": "https://hentaimama.io/genre/swimsuit/",
+        "grid": "portrait"
     },
     {
         "id": "tentacles",
         "name": "Tentacles",
-        "url": "https://hentaimama.io/genre/tentacles/"
+        "url": "https://hentaimama.io/genre/tentacles/",
+        "grid": "portrait"
     },
     {
         "id": "three-some",
         "name": "Three some",
-        "url": "https://hentaimama.io/genre/three-some/"
+        "url": "https://hentaimama.io/genre/three-some/",
+        "grid": "portrait"
     },
     {
         "id": "tits-fuck",
         "name": "Tits Fuck",
-        "url": "https://hentaimama.io/genre/tits-fuck/"
+        "url": "https://hentaimama.io/genre/tits-fuck/",
+        "grid": "portrait"
     },
     {
         "id": "toys",
         "name": "Toys",
-        "url": "https://hentaimama.io/genre/toys/"
+        "url": "https://hentaimama.io/genre/toys/",
+        "grid": "portrait"
     },
     {
         "id": "train-molestation",
         "name": "Train Molestation",
-        "url": "https://hentaimama.io/genre/train-molestation/"
+        "url": "https://hentaimama.io/genre/train-molestation/",
+        "grid": "portrait"
     },
     {
         "id": "trap",
         "name": "Trap",
-        "url": "https://hentaimama.io/genre/trap/"
+        "url": "https://hentaimama.io/genre/trap/",
+        "grid": "portrait"
     },
     {
         "id": "tsundere",
         "name": "Tsundere",
-        "url": "https://hentaimama.io/genre/tsundere/"
+        "url": "https://hentaimama.io/genre/tsundere/",
+        "grid": "portrait"
     },
     {
         "id": "ugly-bastard",
         "name": "Ugly Bastard",
-        "url": "https://hentaimama.io/genre/ugly-bastard/"
+        "url": "https://hentaimama.io/genre/ugly-bastard/",
+        "grid": "portrait"
     },
     {
         "id": "urination",
         "name": "Urination",
-        "url": "https://hentaimama.io/genre/urination/"
+        "url": "https://hentaimama.io/genre/urination/",
+        "grid": "portrait"
     },
     {
         "id": "vampire",
         "name": "Vampire",
-        "url": "https://hentaimama.io/genre/vampire/"
+        "url": "https://hentaimama.io/genre/vampire/",
+        "grid": "portrait"
     },
     {
         "id": "vanilla",
         "name": "Vanilla",
-        "url": "https://hentaimama.io/genre/vanilla/"
+        "url": "https://hentaimama.io/genre/vanilla/",
+        "grid": "portrait"
     },
     {
         "id": "virgins",
         "name": "Virgins",
-        "url": "https://hentaimama.io/genre/virgins/"
+        "url": "https://hentaimama.io/genre/virgins/",
+        "grid": "portrait"
     },
     {
         "id": "watersports",
         "name": "Watersports",
-        "url": "https://hentaimama.io/genre/watersports/"
+        "url": "https://hentaimama.io/genre/watersports/",
+        "grid": "portrait"
     },
     {
         "id": "widow",
         "name": "Widow",
-        "url": "https://hentaimama.io/genre/widow/"
+        "url": "https://hentaimama.io/genre/widow/",
+        "grid": "portrait"
     },
     {
         "id": "womb-tattoo",
         "name": "Womb Tattoo",
-        "url": "https://hentaimama.io/genre/womb-tattoo/"
+        "url": "https://hentaimama.io/genre/womb-tattoo/",
+        "grid": "portrait"
     },
     {
         "id": "x-ray",
         "name": "X-Ray",
-        "url": "https://hentaimama.io/genre/x-ray/"
+        "url": "https://hentaimama.io/genre/x-ray/",
+        "grid": "portrait"
     },
     {
         "id": "yuri",
         "name": "Yuri",
-        "url": "https://hentaimama.io/genre/yuri/"
+        "url": "https://hentaimama.io/genre/yuri/",
+        "grid": "portrait"
     }
 ]

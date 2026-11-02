@@ -1653,6 +1653,10 @@ EXPLORE_SOURCES = [
         sourceId="hentaimama",
         disable=False,
         pageSize=30,
+        # Grid system: per-category control — every category in the
+        # categories JSON is portrait except "Latest", which keeps the
+        # default single list.
+        gridSwitch="custom",
     ),
     ExploreSourceResponse(
         baseUrl="https://hentaibros.net/",

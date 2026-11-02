@@ -16,8 +16,12 @@ class ExploreSourceResponse(BaseModel):
     hasRelatedVideos: bool = False
     relatedAsEpisodes: bool = False
     # "none" (default) = single thumbnail, categories JSON grid ignored;
+    # "default" = default single list, per-category "grid" keys still apply;
     # "custom"/"enable" = categories JSON grid controls per-category layout;
-    # "all" = site-wide grid (missing/"none" grid falls back to double).
+    # "all-double" = site-wide double grid (missing/"none" grid → double);
+    # "all-portrait" = site-wide portrait grid; plain "all" behaves like
+    # "all-double". Any category with a "grid" key always overrides the
+    # site-wide layout.
     gridSwitch: str = "none"
 
 class ExploreCategoryResponse(BaseModel):
