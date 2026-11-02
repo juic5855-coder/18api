@@ -1,27 +1,127 @@
 [
-  { "id": "latest", "name": "Latest", "url": "https://hentaihaven.com/" },
-  { "id": "uncensored", "name": "Uncensored", "url": "https://hentaihaven.com/genre/uncensored-hentai/" },
-  { "id": "censored", "name": "Censored", "url": "https://hentaihaven.com/genre/censored/" },
-  { "id": "softcore", "name": "Softcore", "url": "https://hentaihaven.com/genre/softcore/" },
-  { "id": "3d-hentai", "name": "3D Hentai", "url": "https://hentaihaven.com/genre/3d-hentai/" },
-  { "id": "ahegao", "name": "Ahegao", "url": "https://hentaihaven.com/genre/ahegao/" },
-  { "id": "anal", "name": "Anal", "url": "https://hentaihaven.com/genre/anal/" },
-  { "id": "bdsm", "name": "BDSM", "url": "https://hentaihaven.com/genre/bdsm/" },
-  { "id": "bbw", "name": "BBW", "url": "https://hentaihaven.com/genre/bbw/" },
-  { "id": "big-boobs", "name": "Big Boobs", "url": "https://hentaihaven.com/genre/big-tits/" },
-  { "id": "blow-job", "name": "Blow Job", "url": "https://hentaihaven.com/genre/blowjob/" },
-  { "id": "creampie", "name": "Creampie", "url": "https://hentaihaven.com/genre/creampie/" },
-  { "id": "ecchi", "name": "Ecchi", "url": "https://hentaihaven.com/genre/ecchi/" },
-  { "id": "fantasy", "name": "Fantasy", "url": "https://hentaihaven.com/genre/fantasy/" },
-  { "id": "femdom", "name": "Femdom", "url": "https://hentaihaven.com/genre/femdom/" },
-  { "id": "futanari", "name": "Futanari", "url": "https://hentaihaven.com/genre/futanari/" },
-  { "id": "harem", "name": "Harem", "url": "https://hentaihaven.com/genre/harem/" },
-  { "id": "horror", "name": "Horror", "url": "https://hentaihaven.com/genre/horror/" },
-  { "id": "milf", "name": "MILF", "url": "https://hentaihaven.com/genre/milf/" },
-  { "id": "monster", "name": "Monster", "url": "https://hentaihaven.com/genre/monster/" },
-  { "id": "romance", "name": "Romance", "url": "https://hentaihaven.com/genre/romance/" },
-  { "id": "school", "name": "School", "url": "https://hentaihaven.com/genre/school/" },
-  { "id": "tentacle", "name": "Tentacle", "url": "https://hentaihaven.com/genre/tentacle/" },
-  { "id": "yaoi", "name": "Yaoi", "url": "https://hentaihaven.com/genre/yaoi/" },
-  { "id": "yuri", "name": "Yuri", "url": "https://hentaihaven.com/genre/yuri/" }
+    {
+        "id": "latest",
+        "name": "Latest",
+        "url": "https://hentaihaven.com/"
+    },
+    {
+        "id": "uncensored",
+        "name": "Uncensored",
+        "url": "https://hentaihaven.com/genre/uncensored-hentai/"
+    },
+    {
+        "id": "censored",
+        "name": "Censored",
+        "url": "https://hentaihaven.com/genre/censored/"
+    },
+    {
+        "id": "softcore",
+        "name": "Softcore",
+        "url": "https://hentaihaven.com/genre/softcore/"
+    },
+    {
+        "id": "3d-hentai",
+        "name": "3D Hentai",
+        "url": "https://hentaihaven.com/genre/3d-hentai/"
+    },
+    {
+        "id": "ahegao",
+        "name": "Ahegao",
+        "url": "https://hentaihaven.com/genre/ahegao/"
+    },
+    {
+        "id": "anal",
+        "name": "Anal",
+        "url": "https://hentaihaven.com/genre/anal/"
+    },
+    {
+        "id": "bdsm",
+        "name": "BDSM",
+        "url": "https://hentaihaven.com/genre/bdsm/"
+    },
+    {
+        "id": "bbw",
+        "name": "BBW",
+        "url": "https://hentaihaven.com/genre/bbw/"
+    },
+    {
+        "id": "big-boobs",
+        "name": "Big Boobs",
+        "url": "https://hentaihaven.com/genre/big-tits/"
+    },
+    {
+        "id": "blow-job",
+        "name": "Blow Job",
+        "url": "https://hentaihaven.com/genre/blowjob/"
+    },
+    {
+        "id": "creampie",
+        "name": "Creampie",
+        "url": "https://hentaihaven.com/genre/creampie/"
+    },
+    {
+        "id": "ecchi",
+        "name": "Ecchi",
+        "url": "https://hentaihaven.com/genre/ecchi/"
+    },
+    {
+        "id": "fantasy",
+        "name": "Fantasy",
+        "url": "https://hentaihaven.com/genre/fantasy/"
+    },
+    {
+        "id": "femdom",
+        "name": "Femdom",
+        "url": "https://hentaihaven.com/genre/femdom/"
+    },
+    {
+        "id": "futanari",
+        "name": "Futanari",
+        "url": "https://hentaihaven.com/genre/futanari/"
+    },
+    {
+        "id": "harem",
+        "name": "Harem",
+        "url": "https://hentaihaven.com/genre/harem/"
+    },
+    {
+        "id": "horror",
+        "name": "Horror",
+        "url": "https://hentaihaven.com/genre/horror/"
+    },
+    {
+        "id": "milf",
+        "name": "MILF",
+        "url": "https://hentaihaven.com/genre/milf/"
+    },
+    {
+        "id": "monster",
+        "name": "Monster",
+        "url": "https://hentaihaven.com/genre/monster/"
+    },
+    {
+        "id": "romance",
+        "name": "Romance",
+        "url": "https://hentaihaven.com/genre/romance/"
+    },
+    {
+        "id": "school",
+        "name": "School",
+        "url": "https://hentaihaven.com/genre/school/"
+    },
+    {
+        "id": "tentacle",
+        "name": "Tentacle",
+        "url": "https://hentaihaven.com/genre/tentacle/"
+    },
+    {
+        "id": "yaoi",
+        "name": "Yaoi",
+        "url": "https://hentaihaven.com/genre/yaoi/"
+    },
+    {
+        "id": "yuri",
+        "name": "Yuri",
+        "url": "https://hentaihaven.com/genre/yuri/"
+    }
 ]

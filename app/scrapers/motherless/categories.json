@@ -1,27 +1,22 @@
 [
     {
         "name": "Home",
-        "url": "https://motherlesss.net/",
-        "video_count": 0
+        "url": "https://motherlesss.net/"
     },
     {
         "name": "Category",
-        "url": "https://motherlesss.net/category/",
-        "video_count": 0
+        "url": "https://motherlesss.net/category/"
     },
     {
         "name": "Model",
-        "url": "https://motherlesss.net/model/",
-        "video_count": 0
+        "url": "https://motherlesss.net/model/"
     },
     {
         "name": "Series",
-        "url": "https://motherlesss.net/series/",
-        "video_count": 0
+        "url": "https://motherlesss.net/series/"
     },
     {
         "name": "Tags",
-        "url": "https://motherlesss.net/tags/",
-        "video_count": 0
+        "url": "https://motherlesss.net/tags/"
     }
 ]

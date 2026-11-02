@@ -231,6 +231,8 @@ EXPLORE_SOURCES = [
         searchUrlTemplate="https://xxxparodyhd.net/?s={query}",
         sourceId="xxxparodyhd",
         disable=False,
+        # Portrait poster grid: categories JSON sets grid=portrait per category.
+        gridSwitch="custom",
     ),
     ExploreSourceResponse(
         baseUrl="https://www.pornwex.tv/",

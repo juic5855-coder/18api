@@ -1,15 +1,67 @@
 [
-  { "id": "home", "name": "Home", "url": "https://cosxplay.com/" },
-  { "id": "new", "name": "New Videos", "url": "https://cosxplay.com/?filter=latest" },
-  { "id": "best", "name": "Best Videos", "url": "https://cosxplay.com/?filter=most-viewed" },
-  { "id": "longest", "name": "Longest Videos", "url": "https://cosxplay.com/?filter=longest" },
-  { "id": "nier-automata", "name": "Nier Automata", "url": "https://cosxplay.com/7841-nier-automata/" },
-  { "id": "ahegao", "name": "Ahegao", "url": "https://cosxplay.com/4063-ahegao/" },
-  { "id": "anal", "name": "Anal", "url": "https://cosxplay.com/11104-anal/" },
-  { "id": "asian", "name": "Asian", "url": "https://cosxplay.com/11115-asian/" },
-  { "id": "blowjob", "name": "Blowjob", "url": "https://cosxplay.com/11116-blowjob/" },
-  { "id": "creampie", "name": "Creampie", "url": "https://cosxplay.com/11113-creampie/" },
-  { "id": "femboy", "name": "Femboy", "url": "https://cosxplay.com/71061-femboy/" },
-  { "id": "genshin", "name": "Genshin", "url": "https://cosxplay.com/tag/21244-genshin/" },
-  { "id": "overwatch-dva", "name": "D.Va", "url": "https://cosxplay.com/95-overwatch/293-dva/" }
+    {
+        "id": "home",
+        "name": "Home",
+        "url": "https://cosxplay.com/"
+    },
+    {
+        "id": "new",
+        "name": "New Videos",
+        "url": "https://cosxplay.com/?filter=latest"
+    },
+    {
+        "id": "best",
+        "name": "Best Videos",
+        "url": "https://cosxplay.com/?filter=most-viewed"
+    },
+    {
+        "id": "longest",
+        "name": "Longest Videos",
+        "url": "https://cosxplay.com/?filter=longest"
+    },
+    {
+        "id": "nier-automata",
+        "name": "Nier Automata",
+        "url": "https://cosxplay.com/7841-nier-automata/"
+    },
+    {
+        "id": "ahegao",
+        "name": "Ahegao",
+        "url": "https://cosxplay.com/4063-ahegao/"
+    },
+    {
+        "id": "anal",
+        "name": "Anal",
+        "url": "https://cosxplay.com/11104-anal/"
+    },
+    {
+        "id": "asian",
+        "name": "Asian",
+        "url": "https://cosxplay.com/11115-asian/"
+    },
+    {
+        "id": "blowjob",
+        "name": "Blowjob",
+        "url": "https://cosxplay.com/11116-blowjob/"
+    },
+    {
+        "id": "creampie",
+        "name": "Creampie",
+        "url": "https://cosxplay.com/11113-creampie/"
+    },
+    {
+        "id": "femboy",
+        "name": "Femboy",
+        "url": "https://cosxplay.com/71061-femboy/"
+    },
+    {
+        "id": "genshin",
+        "name": "Genshin",
+        "url": "https://cosxplay.com/tag/21244-genshin/"
+    },
+    {
+        "id": "overwatch-dva",
+        "name": "D.Va",
+        "url": "https://cosxplay.com/95-overwatch/293-dva/"
+    }
 ]

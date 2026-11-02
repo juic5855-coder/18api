@@ -15,6 +15,10 @@ class ExploreSourceResponse(BaseModel):
     pageSize: int = 20
     hasRelatedVideos: bool = False
     relatedAsEpisodes: bool = False
+    # "none" (default) = single thumbnail, categories JSON grid ignored;
+    # "custom"/"enable" = categories JSON grid controls per-category layout;
+    # "all" = site-wide grid (missing/"none" grid falls back to double).
+    gridSwitch: str = "none"
 
 class ExploreCategoryResponse(BaseModel):
     id: str

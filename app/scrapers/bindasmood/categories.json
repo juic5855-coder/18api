@@ -1,7 +1,27 @@
 [
-  { "id": "home", "name": "Home", "url": "https://bindasmood.com/" },
-  { "id": "latest", "name": "Newest", "url": "https://bindasmood.com/?filter=latest" },
-  { "id": "popular", "name": "Best", "url": "https://bindasmood.com/?filter=popular" },
-  { "id": "most-viewed", "name": "Most Viewed", "url": "https://bindasmood.com/?filter=most-viewed" },
-  { "id": "longest", "name": "Longest", "url": "https://bindasmood.com/?filter=longest" }
+    {
+        "id": "home",
+        "name": "Home",
+        "url": "https://bindasmood.com/"
+    },
+    {
+        "id": "latest",
+        "name": "Newest",
+        "url": "https://bindasmood.com/?filter=latest"
+    },
+    {
+        "id": "popular",
+        "name": "Best",
+        "url": "https://bindasmood.com/?filter=popular"
+    },
+    {
+        "id": "most-viewed",
+        "name": "Most Viewed",
+        "url": "https://bindasmood.com/?filter=most-viewed"
+    },
+    {
+        "id": "longest",
+        "name": "Longest",
+        "url": "https://bindasmood.com/?filter=longest"
+    }
 ]

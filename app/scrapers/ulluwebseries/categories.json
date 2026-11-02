@@ -1,8 +1,32 @@
 [
-  { "id": "home", "name": "Home", "url": "https://ulluwebseries.me/" },
-  { "id": "ullu", "name": "ULLU", "url": "https://ulluwebseries.me/series_category/ullu/" },
-  { "id": "moodx", "name": "MoodX", "url": "https://ulluwebseries.me/series_category/moodx/" },
-  { "id": "hothit", "name": "HotHit", "url": "https://ulluwebseries.me/series_category/hothit/" },
-  { "id": "boomex", "name": "Boomex", "url": "https://ulluwebseries.me/series_category/boomex/" },
-  { "id": "altt", "name": "ALTT", "url": "https://ulluwebseries.me/series_category/altt/" }
+    {
+        "id": "home",
+        "name": "Home",
+        "url": "https://ulluwebseries.me/"
+    },
+    {
+        "id": "ullu",
+        "name": "ULLU",
+        "url": "https://ulluwebseries.me/series_category/ullu/"
+    },
+    {
+        "id": "moodx",
+        "name": "MoodX",
+        "url": "https://ulluwebseries.me/series_category/moodx/"
+    },
+    {
+        "id": "hothit",
+        "name": "HotHit",
+        "url": "https://ulluwebseries.me/series_category/hothit/"
+    },
+    {
+        "id": "boomex",
+        "name": "Boomex",
+        "url": "https://ulluwebseries.me/series_category/boomex/"
+    },
+    {
+        "id": "altt",
+        "name": "ALTT",
+        "url": "https://ulluwebseries.me/series_category/altt/"
+    }
 ]

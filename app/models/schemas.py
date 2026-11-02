@@ -899,6 +899,10 @@ class CategoryItem(BaseModel):
     name: str
     url: str
     video_count: Optional[int] = 0
+    # Card layout for the source detail grid: "single" | "double" | "portrait".
+    # Missing/"none" falls back to the source default. Only honored when the
+    # explore JSON sets gridSwitch to "custom"/"enable" (or "all").
+    grid: Optional[str] = None
 
 
 # ===== Job Schemas =====

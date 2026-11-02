@@ -1,22 +1,18 @@
 [
     {
         "name": "Home",
-        "url": "https://sosalkino.city/",
-        "video_count": 0
+        "url": "https://sosalkino.city/"
     },
     {
         "name": "Latest Updates",
-        "url": "https://sosalkino.city/latest-updates/",
-        "video_count": 0
+        "url": "https://sosalkino.city/latest-updates/"
     },
     {
         "name": "Top Rated",
-        "url": "https://sosalkino.city/top-rated/",
-        "video_count": 0
+        "url": "https://sosalkino.city/top-rated/"
     },
     {
         "name": "Most Popular",
-        "url": "https://sosalkino.city/most-popular/",
-        "video_count": 0
+        "url": "https://sosalkino.city/most-popular/"
     }
 ]

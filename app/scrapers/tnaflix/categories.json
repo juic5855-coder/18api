@@ -1,11 +1,47 @@
 [
-  { "id": "home", "name": "Newest", "url": "https://www.tnaflix.com/new" },
-  { "id": "popular", "name": "Featured", "url": "https://www.tnaflix.com/featured" },
-  { "id": "trending", "name": "Top Rated", "url": "https://www.tnaflix.com/toprated" },
-  { "id": "amateur-porn", "name": "Amateur Porn", "url": "https://www.tnaflix.com/amateur-porn" },
-  { "id": "anal-porn", "name": "Anal Porn", "url": "https://www.tnaflix.com/anal-porn" },
-  { "id": "hd-porn", "name": "HD Porn", "url": "https://www.tnaflix.com/hd-videos" },
-  { "id": "teen-porn", "name": "Teen Porn", "url": "https://www.tnaflix.com/teen-porn" },
-  { "id": "big-boobs-porn", "name": "Big Boobs Porn", "url": "https://www.tnaflix.com/big-boobs" },
-  { "id": "hardcore-porn", "name": "Hardcore Porn", "url": "https://www.tnaflix.com/hardcore-porn" }
+    {
+        "id": "home",
+        "name": "Newest",
+        "url": "https://www.tnaflix.com/new"
+    },
+    {
+        "id": "popular",
+        "name": "Featured",
+        "url": "https://www.tnaflix.com/featured"
+    },
+    {
+        "id": "trending",
+        "name": "Top Rated",
+        "url": "https://www.tnaflix.com/toprated"
+    },
+    {
+        "id": "amateur-porn",
+        "name": "Amateur Porn",
+        "url": "https://www.tnaflix.com/amateur-porn"
+    },
+    {
+        "id": "anal-porn",
+        "name": "Anal Porn",
+        "url": "https://www.tnaflix.com/anal-porn"
+    },
+    {
+        "id": "hd-porn",
+        "name": "HD Porn",
+        "url": "https://www.tnaflix.com/hd-videos"
+    },
+    {
+        "id": "teen-porn",
+        "name": "Teen Porn",
+        "url": "https://www.tnaflix.com/teen-porn"
+    },
+    {
+        "id": "big-boobs-porn",
+        "name": "Big Boobs Porn",
+        "url": "https://www.tnaflix.com/big-boobs"
+    },
+    {
+        "id": "hardcore-porn",
+        "name": "Hardcore Porn",
+        "url": "https://www.tnaflix.com/hardcore-porn"
+    }
 ]
