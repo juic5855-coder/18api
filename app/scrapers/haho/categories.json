@@ -2,7 +2,8 @@
     {
         "id": "latest-anime",
         "name": "Latest Anime",
-        "url": "https://haho.moe/anime?s=rel-d"
+        "url": "https://haho.moe/anime?s=rel-d",
+        "grid": "portrait"
     },
     {
         "id": "latest-episodes",

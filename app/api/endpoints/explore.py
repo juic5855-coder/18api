@@ -1573,6 +1573,8 @@ EXPLORE_SOURCES = [
         pageSize=36,
         hasRelatedVideos=True,
         relatedAsEpisodes=True,
+        # Portrait poster grid for the anime category (categories JSON grid).
+        gridSwitch="custom",
     ),
     ExploreSourceResponse(
         baseUrl="https://hanime.tv/",
