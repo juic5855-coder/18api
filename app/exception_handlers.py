@@ -15,6 +15,7 @@ templates = Jinja2Templates(directory=str(templates_dir))
 async def not_found_handler(request: Request, exc):
     """Custom 404 error page"""
     return templates.TemplateResponse(
+        request,
         "error.html",
         {
             "request": request,
@@ -31,6 +32,7 @@ async def not_found_handler(request: Request, exc):
 async def internal_error_handler(request: Request, exc):
     """Custom 500 error page"""
     return templates.TemplateResponse(
+        request,
         "error.html",
         {
             "request": request,
@@ -62,6 +64,7 @@ async def general_exception_handler(request: Request, exc):
     message, description = messages.get(status_code, ("Error", "An error occurred"))
     
     return templates.TemplateResponse(
+        request,
         "error.html",
         {
             "request": request,
