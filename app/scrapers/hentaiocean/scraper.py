@@ -71,7 +71,11 @@ def get_categories() -> list[dict]:
         if url in seen_urls:
             continue
         seen_urls.add(url)
-        out.append({"id": cat_id, "name": name, "url": url})
+        entry = {"id": cat_id, "name": name, "url": url}
+        grid = str(item.get("grid") or "").strip()
+        if grid:
+            entry["grid"] = grid
+        out.append(entry)
     return out
 
 
