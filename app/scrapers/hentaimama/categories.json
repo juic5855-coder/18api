@@ -2,8 +2,7 @@
     {
         "id": "latest",
         "name": "Latest",
-        "url": "https://hentaimama.io/recent-episodes/",
-        "grid": "portrait"
+        "url": "https://hentaimama.io/recent-episodes/"
     },
     {
         "id": "tvshows",
