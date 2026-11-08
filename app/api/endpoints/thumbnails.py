@@ -1,11 +1,38 @@
 from fastapi import APIRouter, HTTPException, Query, Response, Request
 from urllib.parse import quote
+import io
 import logging
 
 import httpx
 
+# AVIF -> JPEG transcoding: some sources (e.g. pimpbunny.com) only serve
+# image/avif thumbnails, which Flutter's dart:ui codecs cannot decode.
+# Pillow >= 11 reads AVIF natively; degrade to passthrough if unavailable.
+try:
+    from PIL import Image as _PILImage
+
+    _PIL_OK = True
+except Exception:
+    _PIL_OK = False
+
 router = APIRouter()
 logger = logging.getLogger(__name__)
+
+
+def _is_avif(data: bytes, content_type: str) -> bool:
+    if "avif" in (content_type or "").lower():
+        return True
+    return len(data) > 12 and data[4:8] == b"ftyp" and data[8:12] in (b"avif", b"avis")
+
+
+def _transcode_avif_to_jpeg(content: bytes) -> bytes:
+    with _PILImage.open(io.BytesIO(content)) as im:
+        if getattr(im, "is_animated", False):
+            im.seek(0)
+        buf = io.BytesIO()
+        im.convert("RGB").save(buf, "JPEG", quality=85)
+        return buf.getvalue()
+
 
 @router.get("/proxy", summary="Thumbnail Proxy")
 async def thumbnail_proxy(
@@ -88,6 +115,16 @@ async def thumbnail_proxy(
                 )
             content = resp.content
             content_type = resp.headers.get("content-type", "image/jpeg")
+
+            if _is_avif(content, content_type):
+                if _PIL_OK:
+                    try:
+                        content = _transcode_avif_to_jpeg(content)
+                        content_type = "image/jpeg"
+                    except Exception as e:
+                        logger.warning(f"Thumbnail proxy AVIF transcode failed for {url}: {e}")
+                else:
+                    logger.warning(f"Thumbnail proxy got AVIF for {url} but Pillow is not installed")
 
             return Response(
                 content=content,

@@ -23,6 +23,9 @@ alembic==1.13.1
 # Logging
 python-json-logger==3.2.1
 
+# Image processing (AVIF -> JPEG transcoding in thumbnail proxy)
+Pillow==11.3.0
+
 # Security
 python-dotenv==1.0.1
 cryptography==44.0.0
