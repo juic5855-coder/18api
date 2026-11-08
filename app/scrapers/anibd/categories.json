@@ -2,31 +2,31 @@
     {
         "id": "home",
         "name": "Recently Updated",
-        "url": "https://anibd.app/"
+        "url": "https://mmani.com/"
     },
     {
         "id": "bluray-uncen",
         "name": "Bluray - Uncensored",
-        "url": "https://anibd.app/filter/?fo=22258"
+        "url": "https://mmani.com/filter/?fo=22258"
     },
     {
         "id": "ani16",
         "name": "ani16+",
-        "url": "https://anibd.app/filter/?fo=22410"
+        "url": "https://mmani.com/filter/?fo=22410"
     },
     {
         "id": "movie",
         "name": "Movie",
-        "url": "https://anibd.app/filter/?ty=21341"
+        "url": "https://mmani.com/filter/?ty=21341"
     },
     {
         "id": "filter",
         "name": "Filter",
-        "url": "https://anibd.app/filter/"
+        "url": "https://mmani.com/filter/"
     },
     {
         "id": "topanime",
         "name": "Top Anime",
-        "url": "https://anibd.app/topanime"
+        "url": "https://mmani.com/topanime"
     }
 ]

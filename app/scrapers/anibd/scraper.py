@@ -8,17 +8,26 @@ from urllib.parse import parse_qs, urlencode, urljoin, urlparse
 
 import httpx
 
-BASE_SITE = "https://anibd.app/"
-DEFAULT_BROWSE_URL = "https://anibd.app/"
-UP_BASE = "https://anibd.app/up/"
-SITE_HOST = "anibd.app"
-SITE_ALIASES = frozenset({"anibd.app", "www.anibd.app"})
-SINGLE_API = "https://eng.animeapps.top/api/single.php"
-FILTER_API = "https://eng.animeapps.top/api/singlefilter.php"
-SEARCH_API = "https://eng.animeapps.top/api/search3.php"
-EPISODE_API = "https://epeng.animeapps.top/api2.php"
-APILINK_API = "https://epeng.animeapps.top/apilink.php"
+BASE_SITE = "https://mmani.com/"
+DEFAULT_BROWSE_URL = "https://mmani.com/"
+UP_BASE = "https://mmani.com/up/"
+SITE_HOST = "mmani.com"
+SITE_ALIASES = frozenset(
+    {
+        "mmani.com",
+        "www.mmani.com",
+        "anibd.app",
+        "www.anibd.app",
+    }
+)
+SINGLE_API = "https://mmani.com/ajax.php?single"
+FILTER_API = "https://mmani.com/ajax.php?filter"
+SEARCH_API = "https://mmani.com/ajax.php?search"
+EPISODE_API = "https://mmani.com/ajax.php?episodes"
+APILINK_API = "https://mmani.com/ajax.php?eplink"
+KF_REQ = "20821feefa3cd385c5850cc8"
 STREAM_HOST_SUFFIXES = (
+    "anien.top",
     "animeapps.top",
     "ims1.top",
     "ims2.top",
@@ -33,10 +42,11 @@ _DEFAULT_HEADERS = {
     "Accept": "application/json, text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     "Accept-Language": "en-US,en;q=0.9",
     "Referer": BASE_SITE,
+    "X-KF-Req": KF_REQ,
 }
 
 _UP_PATH_RE = re.compile(r"^/up/(?P<postid>\d+)(?:/watch/?)?/?$", re.IGNORECASE)
-_VIDEO_URL_RE = re.compile(r'videoUrl:\s*"([^"]+)"', re.IGNORECASE)
+_VIDEO_URL_RE = re.compile(r'["\']?videoUrl["\']?\s*:\s*"([^"]+)"', re.IGNORECASE)
 _FILTER_PARAM_MAP = {
     "fo": "postseasontypetagid",
     "ty": "anitypestagid",
@@ -49,7 +59,7 @@ def can_handle(host: str) -> bool:
     h = (host or "").lower().split(":")[0]
     if h.startswith("www."):
         h = h[4:]
-    if h in SITE_ALIASES or h.endswith(".anibd.app"):
+    if h in SITE_ALIASES or h.endswith(".mmani.com") or h.endswith(".anibd.app"):
         return True
     return any(h == suffix or h.endswith("." + suffix) for suffix in STREAM_HOST_SUFFIXES)
 
@@ -97,6 +107,12 @@ def _clean_title(title: str | None) -> Optional[str]:
         return None
     t = str(title).strip()
     for suffix in (
+        " - Anime english subbed - MMani.com",
+        " | Anime english subbed - MMani.com",
+        " - Anime english subbed - Mmani.com",
+        " | Anime english subbed - Mmani.com",
+        " - MMani.com",
+        " | MMani.com",
         " - Anibd.app",
         " | Anibd.app",
         " - ANIBD.APP",
@@ -135,7 +151,7 @@ def _parse_target_url(url: str) -> dict[str, Any]:
         raw = urljoin(BASE_SITE, raw.lstrip("/"))
     parsed = urlparse(raw)
     host = (parsed.netloc or "").lower().replace("www.", "")
-    if host and host not in SITE_ALIASES and not host.endswith(".anibd.app"):
+    if host and host not in SITE_ALIASES and not host.endswith(".mmani.com") and not host.endswith(".anibd.app"):
         raise ValueError(f"Unsupported Anibd URL host: {url}")
 
     match = _UP_PATH_RE.match(parsed.path or "")
@@ -178,7 +194,7 @@ async def _fetch_text(client: httpx.AsyncClient, url: str, *, referer: str | Non
 async def _fetch_single_post(client: httpx.AsyncClient, postid: str) -> dict[str, Any]:
     payload = await _fetch_json(
         client,
-        f"{SINGLE_API}?postid={postid}",
+        f"{SINGLE_API}&postid={postid}",
         referer=_canonical_up_url(postid),
     )
     if not isinstance(payload, dict) or payload.get("status") != "success":
@@ -192,7 +208,7 @@ async def _fetch_single_post(client: httpx.AsyncClient, postid: str) -> dict[str
 async def _fetch_servers(client: httpx.AsyncClient, anilist_id: str) -> list[dict[str, Any]]:
     payload = await _fetch_json(
         client,
-        f"{EPISODE_API}?epid={anilist_id}",
+        f"{EPISODE_API}&epid={anilist_id}",
         referer=BASE_SITE,
     )
     if not isinstance(payload, list) or not payload:
@@ -255,7 +271,7 @@ async def _fetch_apilink_sources(
 ) -> list[dict[str, str]]:
     payload = await _fetch_json(
         client,
-        f"{APILINK_API}?data={player_data_id}",
+        f"{APILINK_API}&data={player_data_id}",
         referer=referer,
     )
     if not isinstance(payload, list):
@@ -319,14 +335,18 @@ def _build_filter_api_url(base_url: str, page: int, limit: int) -> tuple[str, st
     page_num = max(1, int(page) if page else 1)
     qs = parse_qs(parsed.query or "", keep_blank_values=True)
 
-    keyword = _first_non_empty((qs.get("s") or [None])[0], (qs.get("keyword") or [None])[0])
+    keyword = _first_non_empty(
+        (qs.get("s") or [None])[0],
+        (qs.get("keyword") or [None])[0],
+        (qs.get("wd") or [None])[0],
+    )
     if keyword:
         params: dict[str, str] = {
             "keyword": keyword,
             "page": str(page_num),
             "limit": str(max(1, min(int(limit or 100), 100))),
         }
-        return f"{SEARCH_API}?{urlencode(params)}", raw
+        return f"{SEARCH_API}&{urlencode(params)}", raw
 
     params = {
         "page": str(page_num),
@@ -345,7 +365,7 @@ def _build_filter_api_url(base_url: str, page: int, limit: int) -> tuple[str, st
         if value:
             params[api_key] = value
 
-    return f"{FILTER_API}?{urlencode(params)}", raw
+    return f"{FILTER_API}&{urlencode(params)}", raw
 
 
 def parse_video_page(
