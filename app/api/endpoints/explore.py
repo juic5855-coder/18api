@@ -1750,17 +1750,19 @@ EXPLORE_SOURCES = [
         pageSize=25,
     ),
     ExploreSourceResponse(
-        baseUrl="https://anibd.app/",
+        baseUrl="https://mmani.com/",
         nickname="Anibd",
         favicon="https://cdn.jsdelivr.net/gh/756751uosmaqy/vjplayer@main/2fcbd487e5cacb41cbe7802d5ccfc0dc.png",
         accentColor="#0073AA",
         category="anime",
         isVerified=False,
         hasCategories=True,
-        searchUrlTemplate="https://anibd.app/?s={query}",
+        searchUrlTemplate="https://mmani.com/search/?wd={query}",
         sourceId="anibd",
         disable=False,
         pageSize=20,
+        # Custom all-portrait poster grid across every category.
+        gridSwitch="all-portrait",
     ),
     ExploreSourceResponse(
         baseUrl="https://oppai.stream/",
