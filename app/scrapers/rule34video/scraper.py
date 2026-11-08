@@ -38,9 +38,11 @@ def _meta(soup: BeautifulSoup, *, prop: str | None = None, name: str | None = No
 def _best_image_url(img: Any) -> Optional[str]:
     if img is None:
         return None
-    for k in ("data-src", "data-original", "data-lazy", "src"):
+    # rule34video lazy-loads thumbs: src holds a 1x1 data: placeholder while the
+    # real URL is in data-rd-src (with data-rd-jpg as a lower-res fallback).
+    for k in ("data-rd-src", "data-rd-jpg", "data-src", "data-original", "data-lazy", "src"):
         v = img.get(k)
-        if v and str(v).strip():
+        if v and str(v).strip() and not str(v).startswith("data:"):
             return str(v).strip()
     return None
 
