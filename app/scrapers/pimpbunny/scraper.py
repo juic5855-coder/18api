@@ -70,15 +70,19 @@ def _clean_title(title: str | None) -> Optional[str]:
 def _best_image_url(img: Any) -> Optional[str]:
     if img is None:
         return None
-    for key in ("data-src", "data-original", "data-lazy", "src", "srcset"):
+    # Cards are lazy-loaded: `src` holds a data: base64 placeholder and the real
+    # thumbnail lives in `data-original`/`data-webp`. Never return a data: URI.
+    for key in ("data-original", "data-webp", "data-src", "data-original-set", "data-lazy", "src", "srcset"):
         v = img.get(key)
         if not v:
             continue
         url = str(v).strip()
-        if not url:
+        if not url or url.startswith("data:"):
             continue
         if key == "srcset" and " " in url:
             url = url.split(" ", 1)[0].strip()
+        if not url.lower().startswith(("http://", "https://", "//")):
+            continue
         if url.startswith("//"):
             return f"https:{url}"
         return url
@@ -286,6 +290,13 @@ def parse_video_page(html: str, url: str) -> dict[str, Any]:
     )
     description = _first_non_empty(_meta(soup, prop="og:description"), _meta(soup, name="description"))
     thumbnail = _first_non_empty(_meta(soup, prop="og:image"), _meta(soup, name="twitter:image"))
+    if not thumbnail:
+        m = re.search(
+            r"https://pimpbunny\.com/contents/videos_screenshots/[^\"'\s<>\\]+",
+            html.replace("\\/", "/"),
+        )
+        if m:
+            thumbnail = m.group(0)
 
     duration = None
     views = None
