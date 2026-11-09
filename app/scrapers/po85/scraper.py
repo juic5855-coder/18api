@@ -21,7 +21,9 @@ from app.core.pool import fetch_html as pool_fetch_html
 # - 85po.net: mirror, valid TLS.
 # - Language prefixes: /en/ and /ja/ (zh is served from bare paths). The site
 #   redirects bare URLs to /en/ when Accept-Language is en-US.
-# - Video pages: /{lang}/video/{id}/{slug}/ (legacy /v/{id}/{slug}/ paths 404).
+# - Video pages: /{lang}/v/{id}.html (current, verified 2026-11; no slug).
+#   /{lang}/video/{id}/{slug}/ still serves content (og:url points back to the
+#   .html form); the old /v/{id}/{slug}/ shape is gone but harmless to accept.
 # - Streams: same-origin /{lang}/get_file/... links 302 -> signed CDN URL.
 # - Pagination: path based /{page}/ for latest-updates / top-rated /
 #   most-popular; KVS async block params for tag and search pages; the
@@ -267,13 +269,16 @@ def _best_image_url(img: Any) -> Optional[str]:
 # ---------------------------------------------------------------------------
 
 _VIDEO_PATH_RE = re.compile(r"^/(?:[a-z]{2}/)?video/(\d+)/[^/]+/?$", re.IGNORECASE)
+_VIDEO_HTML_PATH_RE = re.compile(r"^/(?:[a-z]{2}/)?v/(\d+)\.html?$", re.IGNORECASE)
 _LEGACY_VIDEO_PATH_RE = re.compile(r"^/(?:[a-z]{2}/)?v/(\d+)/[^/]+/?$", re.IGNORECASE)
 _EMBED_PATH_RE = re.compile(r"^/(?:[a-z]{2}/)?embed/(\d+)/?$", re.IGNORECASE)
+
+_VIDEO_PATH_REGEXES = (_VIDEO_PATH_RE, _VIDEO_HTML_PATH_RE, _LEGACY_VIDEO_PATH_RE)
 
 
 def _extract_video_id(url: str) -> Optional[str]:
     path = urlparse(url or "").path or ""
-    for rx in (_VIDEO_PATH_RE, _LEGACY_VIDEO_PATH_RE, _EMBED_PATH_RE):
+    for rx in (*_VIDEO_PATH_REGEXES, _EMBED_PATH_RE):
         m = rx.match(path)
         if m:
             return m.group(1)
@@ -282,7 +287,7 @@ def _extract_video_id(url: str) -> Optional[str]:
 
 def _is_video_page_url(url: str) -> bool:
     path = urlparse(url or "").path or ""
-    return bool(_VIDEO_PATH_RE.match(path) or _LEGACY_VIDEO_PATH_RE.match(path))
+    return any(rx.match(path) for rx in _VIDEO_PATH_REGEXES)
 
 
 def _is_embed_page_url(url: str) -> bool:
@@ -320,10 +325,11 @@ def _normalize_video_href(href: str, page_url: str = BASE_SITE) -> Optional[str]
     path = parsed.path or ""
     if parsed.query:
         return None
-    if not (_VIDEO_PATH_RE.match(path) or _LEGACY_VIDEO_PATH_RE.match(path)):
+    if not any(rx.match(path) for rx in _VIDEO_PATH_REGEXES):
         return None
     path = re.sub(r"^(/(?:[a-z]{2}/)?)v/(\d+)/", r"\1video/\2/", path, flags=re.IGNORECASE)
-    if not path.endswith("/"):
+    # .html video pages have no trailing slash; slug-style paths do.
+    if not path.endswith("/") and not _VIDEO_HTML_PATH_RE.match(path):
         path += "/"
     return urlunparse(("https", _www(host), path, "", "", ""))
 
@@ -746,10 +752,10 @@ def _find_canonical_video_page_url(soup: BeautifulSoup, html: str, video_id: str
         return None
     for a in soup.select("a[href]"):
         href = _normalize_video_href(a.get("href") or "", page_url)
-        if href and re.search(rf"/video/{re.escape(vid)}/", href, flags=re.IGNORECASE):
+        if href and re.search(rf"/(?:video/{re.escape(vid)}/|v/{re.escape(vid)}\.html)", href, flags=re.IGNORECASE):
             return href
     m = re.search(
-        rf"https?://[^\s\"'<>]*/(?:[a-z]{{2}}/)?video/{re.escape(vid)}/[^\s\"'<>]*/?",
+        rf"https?://[^\s\"'<>]*/(?:[a-z]{{2}}/)?v/{re.escape(vid)}\.html",
         html,
         flags=re.IGNORECASE,
     )
