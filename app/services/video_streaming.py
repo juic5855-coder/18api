@@ -791,7 +791,7 @@ async def get_stream_url(url: str, quality: str = "default", api_base_url: str =
         "p4455.com" in parsed_url.netloc.lower() or
         "mydesi2.boats" in parsed_url.netloc.lower() or
         "myd-cdn.com" in parsed_url.netloc.lower() or
-        "mydesi14.com" in parsed_url.netloc.lower() or
+        "mydesi21.com" in parsed_url.netloc.lower() or
         "mydesi.com.co" in parsed_url.netloc.lower() or
         "mydesi.rest" in parsed_url.netloc.lower() or
         "mydesi.sbs" in parsed_url.netloc.lower() or
@@ -1088,7 +1088,7 @@ async def get_stream_url(url: str, quality: str = "default", api_base_url: str =
             or "p4455.com" in host_l
             or "mydesi2.boats" in host_l
             or "myd-cdn.com" in host_l
-            or "mydesi14.com" in host_l
+            or "mydesi21.com" in host_l
             or "mydesi.com.co" in host_l
             or "mydesi.rest" in host_l
             or "mydesi.sbs" in host_l
