@@ -7,19 +7,25 @@ from typing import Any, Optional
 from urllib.parse import parse_qsl, urlencode, urljoin, urlparse, urlunparse
 
 from bs4 import BeautifulSoup
+from html import unescape as _unescape
 
 from app.core.pool import fetch_html as pool_fetch_html
 
 # ---------------------------------------------------------------------------
-# p4455.com facts (verified 2026-09):
-# - WordPress (theme "kolortube") front-end for the Mydesi.net library.
+# p4455.com facts (verified 2026-11):
+# - WordPress front-end for the Mydesi.net library; theme "mydesi" (the old
+#   "kolortube" markup with div.video-block / JSON-LD / og:* tags is gone).
 # - Video pages are root-level slugs: /{slug}/ (no /video/ or /v/ prefix).
-# - Streams are direct progressive MP4s on *.myd-cdn.com, exposed both as an
-#   inline JSON-LD VideoObject ("contentUrl") and a <video><source src=...>.
-# - There are no og:* tags; JSON-LD is the primary metadata source, with the
-#   <h1> and visible meta line as fallbacks.
-# - Listing cards: div.video-block > a.thumb (img.thumb-img) + a.infos[title].
-# - Pagination: /page/{n}/ for sections, ?paged={n} for search; search is ?s=.
+# - Streams are direct progressive MP4s on *.myd-cdn.com, exposed ONLY as the
+#   player's data-sources JSON attr: div#player[data-sources='[{"label":"HD",
+#   "src":"https://serverNN.myd-cdn.com/<id>.mp4"},...]'] (+ data-src,
+#   data-poster). No JSON-LD, no og:*, no <video src>, no meta description.
+# - Listing cards: article.card > a.thumb[href][title] (img.thumb-img) +
+#   a.title; meta spans: duration as first .meta span text, views in
+#   <span title="135,253 views">, quality in span.badge ("1922p").
+# - Pagination: /page/{n}/ for sections; search is ?s=.
+# - The video detail page shows no views/duration for the main video (only
+#   related cards do), so those fields may legitimately be None there.
 # ---------------------------------------------------------------------------
 
 BASE_URL = "https://p4455.com/"
@@ -39,6 +45,7 @@ _NON_VIDEO_PATH_SEGMENTS = (
     "/webseries-siterps/", "/indian-actors/", "/gallery/", "/upload/",
     "/batch-upload/", "/contact/", "/privacy/", "/dmca/", "/terms/",
     "/18-u-s-c-2257/", "/18-usc-2257/",
+    "/download/", "/stats/", "/actor/", "/actors/", "/embed/",
 )
 
 
@@ -279,7 +286,9 @@ def _is_probable_ad_iframe(src: str) -> bool:
 
 def _extract_inline_urls(html: str) -> list[str]:
     """Direct media URLs embedded in scripts / JSON-LD / inline JSON."""
-    unescaped = html.replace("\\/", "/").replace("\\u0026", "&")
+    # Unescape HTML entities too: data-sources / data-code attributes carry
+    # &quot;-escaped URLs whose tail would otherwise pollute the match.
+    unescaped = _unescape(html).replace("\\/", "/").replace("\\u0026", "&")
     urls: list[str] = []
     for pat in (
         r'https?://[^\s"\'<>]+\.m3u8[^\s"\'<>]*',
@@ -305,11 +314,33 @@ def _collect_player_iframes(soup: BeautifulSoup) -> list[Any]:
     return soup.select("iframe[src]")
 
 
+def _extract_player_sources(soup: BeautifulSoup) -> list[tuple[str, Optional[str]]]:
+    """mydesi theme: direct files live in div#player[data-sources=JSON],
+    a JSON array of {label, src} entries (label like "HD"/"SD"/"720p").
+    BeautifulSoup already unescapes entities in attribute values."""
+    out: list[tuple[str, Optional[str]]] = []
+    for el in soup.select("[data-sources]"):
+        raw = el.get("data-sources") or ""
+        try:
+            data = json.loads(raw)
+        except Exception:
+            continue
+        if not isinstance(data, list):
+            continue
+        for entry in data:
+            if not isinstance(entry, dict):
+                continue
+            src = _normalize_media_url(str(entry.get("src") or ""))
+            if src:
+                out.append((src, str(entry.get("label") or "") or None))
+    return out
+
+
 def _extract_streams(soup: BeautifulSoup, html: str) -> dict[str, Any]:
     streams: list[dict[str, str]] = []
     seen: set[str] = set()
 
-    def _add(url: str, fmt: Optional[str] = None) -> None:
+    def _add(url: str, fmt: Optional[str] = None, quality: Optional[str] = None) -> None:
         if not url or url in seen:
             return
         low = url.lower()
@@ -321,9 +352,20 @@ def _extract_streams(soup: BeautifulSoup, html: str) -> dict[str, Any]:
             else:
                 return
         seen.add(url)
-        streams.append({"url": url, "quality": _quality_from_url(url), "format": fmt})
+        streams.append(
+            {"url": url, "quality": quality or _quality_from_url(url), "format": fmt}
+        )
 
-    # 1. JSON-LD VideoObject contentUrl (primary source on this site)
+    # 0. Player data-sources JSON (primary source on the mydesi theme)
+    for src, label in _extract_player_sources(soup):
+        _add(src, "mp4", quality=label or None)
+    # data-src fallback on the same player (single URL, no label)
+    for el in soup.select("[data-src]"):
+        src = _normalize_media_url(str(el.get("data-src") or ""))
+        if src:
+            _add(src, "mp4")
+
+    # 1. JSON-LD VideoObject contentUrl (older theme revisions)
     for obj in _parse_json_ld(soup):
         content_url = _normalize_media_url(str(obj.get("contentUrl") or ""))
         if content_url:
@@ -425,6 +467,8 @@ def parse_video_page(html: str, url: str) -> dict[str, Any]:
     thumbnail = thumbnail or _first_non_empty(
         _meta(soup, prop="og:image"),
         _meta(soup, name="twitter:image"),
+        # mydesi theme: the player carries the poster (no og:* tags at all)
+        (str(p.get("data-poster")).strip() if (p := soup.select_one("[data-poster]")) and p.get("data-poster") else None),
     )
     if thumbnail and thumbnail.startswith("//"):
         thumbnail = f"https:{thumbnail}"
@@ -434,13 +478,25 @@ def parse_video_page(html: str, url: str) -> dict[str, Any]:
             duration = _normalize_duration(el.get_text(" ", strip=True))
             if duration:
                 break
-    if not duration:
-        duration = _normalize_duration(soup.get_text(" ", strip=True))
+    # NOTE: no whole-page duration/views fallback. The mydesi detail page only
+    # shows clock strings / views for RELATED cards (and 0:00 in the player
+    # controls), so a full-text scan returns wrong data. None is honest.
 
-    views = _extract_views_text(soup.get_text(" ", strip=True))
+    # Views: the detail page normally shows none; only accept a views hint
+    # outside listing cards so related-video counts are never attributed here.
+    views = None
+    for span in soup.select("span[title]"):
+        t = str(span.get("title") or "")
+        if "views" not in t.lower():
+            continue
+        if span.find_parent("article") is not None:
+            continue
+        views = _extract_views_text(t)
+        if views:
+            break
     if not views:
-        views_el = soup.select_one(".views, .views-count, .video-views")
-        if views_el is not None:
+        views_el = soup.select_one(".views, .views-count, .video-views, .video-meta .views")
+        if views_el is not None and views_el.find_parent("article") is None:
             views = _clean_views_text(views_el.get_text(" ", strip=True))
 
     for a in soup.select("a[href*='/category/']"):
@@ -523,11 +579,12 @@ async def list_videos(base_url: str, page: int = 1, limit: int = 100) -> list[di
     items: list[dict[str, Any]] = []
     seen: set[str] = set()
 
-    for div in soup.select("div.video-block"):
+    for div in soup.select("article.card, div.video-block"):
         if len(items) >= limit:
             break
         a_thumb = div.select_one("a.thumb[href]")
-        a_infos = div.select_one("a.infos")
+        # mydesi theme: a.title; old kolortube markup: a.infos
+        a_infos = div.select_one("a.infos") or div.select_one("a.title[href]")
         img = div.select_one("img.thumb-img")
         if a_thumb is None and a_infos is None:
             continue
@@ -548,9 +605,21 @@ async def list_videos(base_url: str, page: int = 1, limit: int = 100) -> list[di
         title = _clean_title(title) or "Unknown Video"
         thumbnail = _best_image_url(img)
 
-        ctext = div.get_text(" ", strip=True) if div else ""
-        duration = _normalize_duration(ctext)
-        views = _extract_views_text(ctext)
+        # mydesi theme: duration is the first .meta span's text; views live in
+        # <span title="135,253 views">. Old markup fallbacks kept.
+        duration = None
+        meta_span = div.select_one(".meta span")
+        if meta_span is not None:
+            duration = _normalize_duration(meta_span.get_text(" ", strip=True))
+        if not duration:
+            duration = _normalize_duration(div.get_text(" ", strip=True))
+
+        views = None
+        views_span = div.select_one('span[title*="views" i], span[title*="view" i]')
+        if views_span is not None:
+            views = _extract_views_text(str(views_span.get("title") or ""))
+        if not views:
+            views = _extract_views_text(div.get_text(" ", strip=True))
 
         seen.add(href)
         items.append(
