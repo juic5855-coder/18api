@@ -13,10 +13,12 @@ from bs4 import BeautifulSoup
 
 from app.core.pool import fetch_html as pool_fetch_html
 
-BASE_URL = "https://mydesihd.guru/"
-CANONICAL_HOST = "mydesihd.guru"
+BASE_URL = "https://mydesix3.guru/"
+CANONICAL_HOST = "mydesix3.guru"
 _SUPPORTED_HOSTS = frozenset(
     {
+        "mydesix3.guru",
+        "www.mydesix3.guru",
         "mydesihd.guru",
         "www.mydesihd.guru",
         "mydesi2.com.co",
