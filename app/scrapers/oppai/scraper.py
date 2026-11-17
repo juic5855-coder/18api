@@ -291,17 +291,23 @@ def _studio_from_page(soup: BeautifulSoup) -> str | None:
 def _related_videos(soup: BeautifulSoup, current_slug: str) -> list[dict[str, Any]]:
     related: list[dict[str, Any]] = []
     seen: set[str] = set()
-
-    def parse_episode_anchor(a: Any) -> dict[str, Any] | None:
+    all_eps_wrap = soup.select_one(".all-episodes")
+    if all_eps_wrap and all_eps_wrap.select("a.episode"):
+        container = all_eps_wrap
+    else:
+        container = soup.select_one("#related-wrap")
+    if not container:
+        return related
+    for a in container.select("a.episode"):
         href = a.get("href", "")
         if not href or "watch" not in href.lower():
-            return None
+            continue
         path_m = re.search(r"/watch/([^/]+)", href)
         if not path_m:
-            return None
+            continue
         slug = path_m.group(1)
         if slug == current_slug or slug in seen:
-            return None
+            continue
         seen.add(slug)
         title_el = a.select_one(".episode-title, p.episode-title")
         title = title_el.get_text(strip=True) if title_el else slug.replace("-", " ")
@@ -314,35 +320,18 @@ def _related_videos(soup: BeautifulSoup, current_slug: str) -> list[dict[str, An
         thumb = None
         if thumb_el:
             thumb = thumb_el.get("src") or thumb_el.get("data-src")
-        duration_el = a.select_one(".ep-time p, .ep-time")
+        duration_el = a.select_one(".ep-time, .ep_tag-time")
         duration = None
         if duration_el:
             t = duration_el.get_text(strip=True)
             if t:
                 duration = t
-        return {
+        related.append({
             "url": f"https://oppai.stream/watch/{slug}",
             "title": title,
             "thumbnail_url": thumb,
             "duration": duration,
-        }
-
-    # Primary: "All Episodes" / "Other Episodes" section — same series
-    all_eps_wrap = soup.select_one(".all-episodes")
-    if all_eps_wrap:
-        for a in all_eps_wrap.select("a.episode"):
-            item = parse_episode_anchor(a)
-            if item:
-                related.append(item)
-
-    # Fallback / supplement: #related-wrap — studio/cross-recommendations
-    related_wrap = soup.select_one("#related-wrap")
-    if related_wrap:
-        for a in related_wrap.select("a.episode"):
-            item = parse_episode_anchor(a)
-            if item:
-                related.append(item)
-
+        })
     return related[:48]
 
 
