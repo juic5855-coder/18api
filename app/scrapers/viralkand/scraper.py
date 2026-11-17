@@ -13,7 +13,7 @@ from app.core.pool import fetch_html as pool_fetch_html
 
 def can_handle(host: str) -> bool:
     h = (host or "").lower()
-    return h == "viralkand.com" or h.endswith(".viralkand.com")
+    return h == "viralkand.chat" or h.endswith(".viralkand.chat")
 
 
 def get_categories() -> list[dict]:
@@ -31,7 +31,7 @@ async def fetch_page(url: str) -> str:
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0 Safari/537.36",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
         "Accept-Language": "en-US,en;q=0.9",
-        "Referer": "https://viralkand.com/",
+        "Referer": "https://viralkand.chat/",
     }
     return await pool_fetch_html(url, headers=headers)
 
@@ -210,12 +210,12 @@ def _normalize_video_href(href: str) -> Optional[str]:
     if href.startswith("//"):
         href = f"https:{href}"
     elif href.startswith("/"):
-        href = f"https://viralkand.com{href}"
+        href = f"https://viralkand.chat{href}"
     if not href.startswith("http"):
         return None
 
     parsed = urlparse(href)
-    if "viralkand.com" not in parsed.netloc.lower():
+    if "viralkand.chat" not in parsed.netloc.lower():
         return None
     if any(x in parsed.path.lower() for x in ("/wp-content/", "/wp-json/", "/tag/", "/category/", "/page/", "/author/", "/feed/")):
         return None
@@ -224,7 +224,7 @@ def _normalize_video_href(href: str) -> Optional[str]:
     if not _is_probable_video_post(parsed):
         return None
     slug = parsed.path.strip("/").split("/", 1)[0]
-    return urlunparse(("https", "viralkand.com", f"/{slug}/", "", "", ""))
+    return urlunparse(("https", "viralkand.chat", f"/{slug}/", "", "", ""))
 
 
 def _extract_inline_urls(html: str) -> list[str]:
@@ -266,7 +266,7 @@ def _extract_streams(soup: BeautifulSoup, html: str) -> dict[str, Any]:
             if src.startswith("//"):
                 src = f"https:{src}"
             elif src.startswith("/"):
-                src = urljoin("https://viralkand.com/", src)
+                src = urljoin("https://viralkand.chat/", src)
             if src.startswith("http") and src not in seen:
                 seen.add(src)
                 streams.append(
@@ -279,7 +279,7 @@ def _extract_streams(soup: BeautifulSoup, html: str) -> dict[str, Any]:
             if src.startswith("//"):
                 src = f"https:{src}"
             elif src.startswith("/"):
-                src = urljoin("https://viralkand.com/", src)
+                src = urljoin("https://viralkand.chat/", src)
             if not src.startswith("http") or src in seen:
                 continue
             seen.add(src)
@@ -303,7 +303,7 @@ def _extract_streams(soup: BeautifulSoup, html: str) -> dict[str, Any]:
         if src.startswith("//"):
             src = f"https:{src}"
         elif src.startswith("/"):
-            src = urljoin("https://viralkand.com/", src)
+            src = urljoin("https://viralkand.chat/", src)
         if not src.startswith("http") or src in seen or _is_probable_ad_iframe(src):
             continue
         seen.add(src)
@@ -443,7 +443,7 @@ def _build_list_page_url(base_url: str, page: int) -> str:
         raw = "https://" + raw.lstrip("/")
     parsed = urlparse(raw)
     scheme = parsed.scheme or "https"
-    netloc = parsed.netloc or "viralkand.com"
+    netloc = parsed.netloc or "viralkand.chat"
     path = parsed.path or "/"
     query_items = dict(parse_qsl(parsed.query, keep_blank_values=True))
 

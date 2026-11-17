@@ -582,7 +582,7 @@ async def get_stream_url(url: str, quality: str = "default", api_base_url: str =
         "gdvid.info" in parsed_url.netloc.lower() or
         "javprovider.com" in parsed_url.netloc.lower() or
         "bollywoodmaal.com" in parsed_url.netloc.lower() or
-        "viralkand.com" in parsed_url.netloc.lower() or
+        "viralkand.chat" in parsed_url.netloc.lower() or
         "viralxxxporn.com" in parsed_url.netloc.lower() or
         "blowjobs.pro" in parsed_url.netloc.lower() or
         "cumlouder.com" in parsed_url.netloc.lower() or
@@ -880,7 +880,7 @@ async def get_stream_url(url: str, quality: str = "default", api_base_url: str =
             or "gdvid.info" in host_l
             or "javprovider.com" in host_l
             or "bollywoodmaal.com" in host_l
-            or "viralkand.com" in host_l
+            or "viralkand.chat" in host_l
             or "viralxxxporn.com" in host_l
             or "blowjobs.pro" in host_l
             or "cumlouder.com" in host_l
