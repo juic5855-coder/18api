@@ -4,21 +4,20 @@ import json
 import os
 import re
 from typing import Any
-from urllib.parse import parse_qs, unquote, urlparse, urlencode, urlunparse, urljoin
+from urllib.parse import parse_qs, unquote, urlparse
 
 import httpx
 from bs4 import BeautifulSoup
 
 BASE = "https://oppai.stream"
-RESULTS_API = f"{BASE}/actions/results.php"
-SEARCH_API = f"{BASE}/actions/search.php"
+SEARCH_API = f"{BASE}/api/search.php"
+CDN_BASE = "https://s1.myspacecat.pictures"
+CDN_DASH = "https://s2.myspacecat.pictures"
 
-_MPD_RE = re.compile(r'https://s2\.myspacecat\.pictures/[^"\'\\s<>]+\.mpd', re.I)
-_MP4_RE = re.compile(r'https://(?:s2\.)?myspacecat\.pictures/[^"\'\\s<>]+\.mp4', re.I)
-_VSRC_MPD_RE = re.compile(
-    r'vsource\s*\[\s*["\']r-(?:720|1080|4k)["\']\s*\]\s*=\s*["\'](https://s2\.myspacecat\.pictures/[^"\']+\.mpd)["\']',
-    re.I,
-)
+_WATCH_PATH_RE = re.compile(r"^/watch/([^/]+)(?:/from/\w+)?", re.I)
+_CATEGORY_RE = re.compile(r"/category/([^/?]+)", re.I)
+_STUDIO_RE = re.compile(r"/studio/([^/?]+)", re.I)
+
 
 def can_handle(host: str) -> bool:
     h = (host or "").lower()
@@ -37,7 +36,6 @@ def _default_http_headers() -> dict[str, str]:
 
 
 def get_categories() -> list[dict[str, Any]]:
-    """Load categories from categories.json (feeds + genre tags)."""
     try:
         path = os.path.join(os.path.dirname(__file__), "categories.json")
         if os.path.exists(path):
@@ -50,13 +48,16 @@ def get_categories() -> list[dict[str, Any]]:
     return []
 
 
-async def fetch_html(url: str) -> str:
+async def fetch_html(url: str, method: str = "GET", data: dict | None = None) -> str:
     async with httpx.AsyncClient(
         follow_redirects=True,
-        timeout=httpx.Timeout(25.0, connect=20.0),
+        timeout=httpx.Timeout(30.0, connect=20.0),
         headers=_default_http_headers(),
     ) as client:
-        r = await client.get(url)
+        if method == "POST" and data:
+            r = await client.post(url, data=data)
+        else:
+            r = await client.get(url)
         r.raise_for_status()
         return r.text
 
@@ -66,20 +67,31 @@ def _normalize_watch_url(url: str) -> str:
     p = urlparse(raw)
     if not p.netloc or not can_handle(p.netloc):
         raise ValueError("URL must be on oppai.stream (main site)")
-    path = (p.path or "").rstrip("/") or "/"
-    if "watch" not in path and "/watch" not in raw.lower():
-        raise ValueError("Expected an episode URL such as https://oppai.stream/watch?e=Series-Name-1")
+    path = (p.path or "").rstrip("/")
+    m = _WATCH_PATH_RE.match(path)
+    if m:
+        slug = m.group(1)
+        return f"https://oppai.stream/watch/{slug}"
+    if "/watch" not in path.lower():
+        raise ValueError("Expected a watch URL such as https://oppai.stream/watch/Series-Name-1")
+    raise ValueError("Could not parse watch URL slug from: " + raw)
+
+
+def _slug_from_watch_url(url: str) -> str:
+    raw = (url or "").strip()
+    p = urlparse(raw)
+    path = (p.path or "").rstrip("/")
+    m = _WATCH_PATH_RE.match(path)
+    if m:
+        return m.group(1)
     qs = parse_qs(p.query)
     slug_list = qs.get("e") or qs.get("E")
-    if not slug_list or not slug_list[0]:
-        raise ValueError("Missing episode slug: use ?e=... in the watch URL")
-    slug = slug_list[0].strip()
-    q = urlencode({"e": slug})
-    return urlunparse(("https", "oppai.stream", "/watch", "", q, ""))
+    if slug_list and slug_list[0]:
+        return slug_list[0].strip()
+    raise ValueError("Could not extract slug from: " + raw)
 
 
 def _meta_content(soup: BeautifulSoup, *, prop: str | None = None, name: str | None = None) -> str | None:
-    attrs = {}
     if prop:
         tag = soup.find("meta", attrs={"property": prop})
     else:
@@ -102,8 +114,8 @@ def _quality_rank(label: str) -> int:
     return 0
 
 
-def _quality_from_stream_url(stream_url: str) -> str:
-    lower = stream_url.lower()
+def _quality_from_url(url: str) -> str:
+    lower = url.lower()
     if "/4k/" in lower or "/2160/" in lower:
         return "4k"
     if "/1080/" in lower:
@@ -115,92 +127,115 @@ def _quality_from_stream_url(stream_url: str) -> str:
     return "unknown"
 
 
-def _extract_streams(html: str, soup: BeautifulSoup) -> tuple[list[dict[str, Any]], str | None]:
+def _parse_inline_vars(html: str) -> dict[str, Any]:
+    vars: dict[str, Any] = {}
+    for m in re.finditer(r'var\s+(\w+)\s*=\s*([^;]+);', html):
+        key, val = m.group(1), m.group(2).strip()
+        try:
+            vars[key] = json.loads(val)
+        except (json.JSONDecodeError, ValueError):
+            if val.startswith("[") or val.startswith("{"):
+                continue
+            vars[key] = val.strip('"\' ')
+    return vars
+
+
+def _build_stream_urls(folder: str, ep_str: str, res_list: list[str], resolutions: dict[str, str]) -> list[dict[str, Any]]:
     streams: list[dict[str, Any]] = []
     seen: set[str] = set()
+    ep_num = int(ep_str) if ep_str.isdigit() else 1
+    ep_fmt = f"{ep_num:02d}"
 
-    video_el = soup.find("video", id="episode")
-    if video_el:
-        for src in video_el.find_all("source"):
-            u = src.get("src")
-            if not u or ".mp4" not in u.lower():
-                continue
-            if u in seen:
-                continue
-            seen.add(u)
-            q = _quality_from_stream_url(u)
-            streams.append(
-                {
-                    "quality": q,
-                    "url": u,
-                    "format": "mp4",
-                    "server": "myspacecat",
-                }
-            )
-
-    for u in _MPD_RE.findall(html):
-        if u in seen:
+    for res in res_list:
+        fmt = resolutions.get(res, "mp4")
+        if fmt == "dash":
+            url = f"{CDN_DASH}/{folder}/{res}/E{ep_fmt}_dash/E{ep_fmt}_dash.mpd"
+        else:
+            url = f"{CDN_BASE}/{folder}/ep.{fmt}"
+        if url in seen:
             continue
-        seen.add(u)
-        q = _quality_from_stream_url(u)
-        streams.append(
-            {
-                "quality": q,
-                "url": u,
-                "format": "dash",
-                "server": "myspacecat-dash",
-            }
-        )
+        seen.add(url)
+        streams.append({
+            "quality": res,
+            "url": url,
+            "format": "dash" if fmt == "dash" else fmt,
+            "server": "myspacecat-dash" if fmt == "dash" else "myspacecat",
+        })
 
-    for m in _VSRC_MPD_RE.finditer(html):
-        u = m.group(1)
-        if u in seen:
+    fallback_resolutions = {
+        "4k": "webm", "4k-1": "mp4", "4k-2": "webm",
+        "1080": "mp4", "1080-1": "mp4",
+        "720": "mp4",
+    }
+    for res, ext in fallback_resolutions.items():
+        if res in res_list:
             continue
-        seen.add(u)
-        streams.append(
-            {
-                "quality": _quality_from_stream_url(u),
-                "url": u,
-                "format": "dash",
-                "server": "myspacecat-dash",
-            }
-        )
-
-    # Fallback: any mp4 URL embedded in scripts
-    for u in _MP4_RE.findall(html):
-        if u in seen:
+        if ext == "dash":
+            url = f"{CDN_DASH}/{folder}/{res}/E{ep_fmt}_dash/E{ep_fmt}_dash.mpd"
+        else:
+            url = f"{CDN_BASE}/{folder}/ep.{ext}"
+        if url in seen:
             continue
-        seen.add(u)
-        streams.append(
-            {
-                "quality": _quality_from_stream_url(u),
-                "url": u,
-                "format": "mp4",
-                "server": "myspacecat",
-            }
-        )
+        seen.add(url)
+        q = _quality_from_url(url)
+        streams.append({
+            "quality": q,
+            "url": url,
+            "format": "dash" if ext == "dash" else ext,
+            "server": "myspacecat-dash" if ext == "dash" else "myspacecat",
+        })
 
     streams.sort(key=lambda s: _quality_rank(str(s.get("quality", ""))), reverse=True)
-    default_url: str | None = None
-    mp4_only = [s for s in streams if s.get("format") == "mp4"]
-    if mp4_only:
-        default_url = max(mp4_only, key=lambda s: _quality_rank(str(s.get("quality", ""))))["url"]
-    elif streams:
-        default_url = streams[0]["url"]
+    return streams
+
+
+def _extract_streams(html: str, soup: BeautifulSoup) -> tuple[list[dict[str, Any]], str | None]:
+    vars = _parse_inline_vars(html)
+    folder = vars.get("folder", "")
+    ep_str = str(vars.get("ep", "1"))
+    res_list = vars.get("resList", [])
+    resolutions = vars.get("resolutions", {})
+
+    if not folder or not res_list:
+        jsonld_m = re.search(r'"contentUrl"\s*:\s*"([^"]+)"', html)
+        if jsonld_m:
+            content_url = jsonld_m.group(1)
+            streams = [{
+                "quality": "unknown",
+                "url": content_url,
+                "format": content_url.split(".")[-1] if "." in content_url else "webm",
+                "server": "myspacecat",
+            }]
+            return streams, content_url
+        return [], None
+
+    streams = _build_stream_urls(folder, ep_str, res_list, resolutions)
+    default_url = streams[0]["url"] if streams else None
     return streams, default_url
 
 
 def _title_from_page(soup: BeautifulSoup) -> str | None:
-    h1 = soup.select_one("h1.white.bebas.line-2")
+    h1 = soup.select_one("h1#episode-title")
     if h1:
-        t = h1.get_text(strip=True)
-        if t:
-            return t
+        parts = []
+        for child in h1.children:
+            if hasattr(child, 'name') and child.name == 'font':
+                parts.append(' ' + child.get_text(strip=True))
+            else:
+                t = child.get_text(strip=True)
+                if t:
+                    parts.append(t)
+        if parts:
+            text = ''.join(parts)
+            h2 = soup.select_one("h2.white.bebas.line-3")
+            if h2:
+                series = h2.get_text(strip=True)
+                if series and series not in text:
+                    text = f"{series} {text}"
+            return text
     og = _meta_content(soup, prop="og:title")
     if og:
-        og = re.sub(r"^\s*Watch\s+", "", og, flags=re.I)
-        og = re.sub(r"\s+on\s+Oppai\.Stream\s*$", "", og, flags=re.I)
-        return og.strip() or None
+        return re.sub(r"\s+on\s+Oppai\.Stream\s*$", "", og, flags=re.I).strip() or None
     tag = soup.find("title")
     if tag:
         return tag.get_text(strip=True) or None
@@ -208,186 +243,218 @@ def _title_from_page(soup: BeautifulSoup) -> str | None:
 
 
 def _description_from_page(soup: BeautifulSoup) -> str | None:
-    desc_el = soup.select_one(".description h5")
-    if desc_el:
-        text = desc_el.get_text("\n", strip=True)
-        if text:
-            return text
-    og = _meta_content(soup, prop="og:description")
-    if og:
-        main = og.split("|", 1)[0].strip()
-        return main or og
-    return None
+    el = soup.select_one("article#episode-description")
+    if el:
+        texts = []
+        for p in el.find_all("p", recursive=False):
+            t = p.get_text(strip=True)
+            if t and "Watch" not in t and "Oppai.Stream" not in t:
+                texts.append(t)
+        if texts:
+            return " ".join(texts)
+        full = el.get_text(strip=True)
+        if full:
+            return full
+    return _meta_content(soup, prop="og:description")
 
 
 def _tags_from_page(soup: BeautifulSoup) -> list[str]:
     out: list[str] = []
-    for a in soup.select(".tags a.tag h5"):
-        t = a.get_text(strip=True)
-        if t:
-            out.append(t)
+    wrap = soup.select_one(".wrap-genres")
+    if wrap:
+        for a in wrap.select("a.button"):
+            href = a.get("href", "")
+            m = _CATEGORY_RE.search(href)
+            if m:
+                t = a.get_text(strip=True)
+                if t:
+                    out.append(t)
     return out
 
 
 def _studio_from_page(soup: BeautifulSoup) -> str | None:
-    a = soup.select_one('a[href*="search?studio="]')
-    if not a:
-        return None
-    href = a.get("href") or ""
-    if "studio=" not in href:
-        return None
-    q = urlparse(href).query
-    for part in q.split("&"):
-        if part.startswith("studio="):
-            return unquote(part.split("=", 1)[1]).replace("+", " ").strip() or None
+    wrap = soup.select_one(".wrap-genres")
+    if wrap:
+        for a in wrap.select("a.button"):
+            href = a.get("href", "") or ""
+            m = _STUDIO_RE.search(href)
+            if m:
+                t = a.get_text(strip=True)
+                if t:
+                    return t
     return None
 
 
 def _related_videos(soup: BeautifulSoup, current_slug: str) -> list[dict[str, Any]]:
     related: list[dict[str, Any]] = []
     seen: set[str] = set()
-    for grid in soup.select("div.episode-shown"):
-        link = grid.select_one("a[href*='watch?e=']")
-        if not link:
+    container = soup.select_one("#related-wrap")
+    if not container:
+        return related
+    for a in container.select("a.episode"):
+        href = a.get("href", "")
+        if not href or "watch" not in href.lower():
             continue
-        href = link.get("href") or ""
-        q = parse_qs(urlparse(href).query)
-        # Oppai has multiple episode grids on the watch page (same series eps vs recommended).
-        # "More Episodes" uses `for=episode-more`; recommended uses other `for` values.
-        for_param = (q.get("for") or [""])[0].strip().lower()
-        if for_param != "episode-more":
+        path_m = re.search(r"/watch/([^/]+)", href)
+        if not path_m:
             continue
-        slug = (q.get("e") or [None])[0]
-        if not slug or slug == current_slug or slug in seen:
+        slug = path_m.group(1)
+        if slug == current_slug or slug in seen:
             continue
         seen.add(slug)
-        name = (grid.get("name") or "").strip()
-        ep = (grid.get("ep") or "").strip()
-        title = f"{name} {ep}".strip() or slug.replace("-", " ")
-        thumb_el = grid.select_one("img.cover-img-in")
+        title_el = a.select_one(".episode-title, p.episode-title")
+        title = title_el.get_text(strip=True) if title_el else slug.replace("-", " ")
+        ep_el = a.select_one(".episode-number, p.episode-number")
+        if ep_el:
+            ep_text = ep_el.get_text(strip=True)
+            if ep_text:
+                title = f"{title} {ep_text}".strip()
+        thumb_el = a.select_one("img.cover")
         thumb = None
         if thumb_el:
-            thumb = thumb_el.get("original") or thumb_el.get("src")
-        full_href = href if href.startswith("http") else urljoin(BASE, href)
-        item: dict[str, Any] = {
-            "url": _normalize_watch_url(full_href),
+            thumb = thumb_el.get("src") or thumb_el.get("data-src")
+        duration_el = a.select_one(".ep-time, .ep_tag-time")
+        duration = None
+        if duration_el:
+            t = duration_el.get_text(strip=True)
+            if t:
+                duration = t
+        related.append({
+            "url": f"https://oppai.stream/watch/{slug}",
             "title": title,
             "thumbnail_url": thumb,
-        }
-        tags_raw = grid.get("tags")
-        if tags_raw:
-            item["tags"] = [t.strip() for t in tags_raw.split(",") if t.strip()]
-        related.append(item)
+            "duration": duration,
+        })
     return related[:48]
 
 
 def _results_section_key(base_url: str) -> str:
-    """Map browse URL to results.php sc=… (matches site sections)."""
+    u = (base_url or "").lower()
     p = urlparse(base_url or "")
+    path = (p.path or "").lower()
     qs = parse_qs(p.query)
     a_val = (qs.get("a") or qs.get("A") or [""])[0].lower().strip()
     if a_val == "trending":
-        return "weekly-views"
+        return "views"
     if a_val == "random":
         return "random"
-    if a_val == "recent":
-        return "recent"
     if a_val == "uploaded":
         return "uploaded"
-
-    u = (base_url or "").lower()
-    path = (p.path or "").lower()
-    if "weekly-views" in u or "trending" in u or "/trending" in path or "top-10" in u or "top10" in u:
-        return "weekly-views"
-    if "random" in u:
-        return "random"
-    if "for-you" in u or "for_you" in u or ("recent" in u and "uploaded" not in u and "search" not in u):
-        return "recent"
-    return "uploaded"
-
-
-def _order_for_search_api(qs: dict[str, list[str]]) -> str:
-    """Map search page ?a=… to actions/search.php order=."""
-    a = (qs.get("a") or [""])[0].lower().strip()
-    if a == "trending":
+    if "popular" in path or "trending" in u:
         return "views"
-    if a == "uploaded":
-        return "uploaded"
-    if a == "random":
+    if "random" in u or "random" in path:
         return "random"
+    if "new-releases" in path or "recent" in u:
+        return "recent"
     return "recent"
 
 
-def _browse_search_api_url(base_url: str, page: int, limit: int) -> str | None:
-    """
-    Build actions/search.php URL from /search?… browse links.
-    Supports site-style params: t text, g genres, b blacklist, s studio, a sort.
-    """
+def _browse_search_post_data(base_url: str, page: int, limit: int) -> dict[str, Any] | None:
     p = urlparse(base_url or "")
     qs = parse_qs(p.query)
-    text = (qs.get("t") or qs.get("q") or [""])[0].strip()
-    genres = (qs.get("g") or [""])[0].strip()
-    blacklist = (qs.get("b") or [""])[0].strip()
-    studio = (qs.get("s") or qs.get("studio") or [""])[0].strip()
-    if not any([text, genres, blacklist, studio]):
+    path = p.path.lower().strip("/")
+    text = (qs.get("s") or qs.get("q") or qs.get("t") or [""])[0].strip()
+    genres = (qs.get("categories") or qs.get("g") or [""])[0].strip()
+    blacklist = (qs.get("blacklist") or [""])[0].strip()
+    studios = (qs.get("studios") or qs.get("s") or [""])[0].strip()
+    order = (qs.get("order") or ["recent"])[0].strip()
+    if path == "search" and not any([text, genres, blacklist, studios]):
         return None
-    order = _order_for_search_api(qs)
-    params = urlencode(
-        {
-            "text": text,
-            "order": order,
-            "page": str(page),
-            "limit": str(limit),
-            "genres": genres,
-            "blacklist": blacklist,
-            "studio": studio,
-            "ibt": "0",
-            "swa": "",
-        }
-    )
-    return f"{SEARCH_API}?{params}"
+    if path.startswith("category/"):
+        slug = path.split("/", 1)[1]
+        if slug:
+            genres = slug
+    if path.startswith("studio/"):
+        slug = path.split("/", 1)[1]
+        if slug:
+            studios = slug
+    order_map = {"recent": "recent", "views": "views", "trending": "views", "uploaded": "uploaded", "random": "random"}
+    return {
+        "text": text,
+        "tags": genres,
+        "blacklist": blacklist,
+        "studios": studios,
+        "order": order_map.get(order, "recent"),
+        "limit": str(min(limit, 100)),
+        "page": str(page),
+        "classes": "smaller-episode-gap",
+        "character_filters": "{}",
+    }
 
 
-def _category_browse_url(base_url: str, page: int, limit: int) -> str | None:
-    """Legacy /category/{slug} → search API genres filter."""
-    parts = [x for x in (urlparse(base_url or "").path or "").strip("/").split("/") if x]
-    if len(parts) < 2 or parts[0].lower() != "category":
-        return None
-    slug = parts[1].strip()
-    if not slug:
-        return None
-    params = urlencode(
-        {
-            "text": "",
-            "order": "recent",
-            "page": str(page),
-            "limit": str(limit),
-            "genres": slug,
-            "blacklist": "",
-            "studio": "",
-            "ibt": "0",
-            "swa": "",
-        }
-    )
-    return f"{SEARCH_API}?{params}"
+def _parse_list_html(fragment: str) -> list[dict[str, Any]]:
+    soup = BeautifulSoup(fragment, "lxml")
+    items: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for a in soup.select("a.episode"):
+        href = a.get("href", "")
+        if not href or "watch" not in href.lower():
+            continue
+        path_m = re.search(r"/watch/([^/]+)", href)
+        if not path_m:
+            continue
+        slug = path_m.group(1)
+        if slug in seen:
+            continue
+        seen.add(slug)
+        title_el = a.select_one(".episode-title, p.episode-title")
+        title = title_el.get_text(strip=True) if title_el else slug.replace("-", " ")
+        ep_el = a.select_one(".episode-number, p.episode-number")
+        if ep_el:
+            ep_text = ep_el.get_text(strip=True)
+            if ep_text:
+                title = f"{title} {ep_text}".strip()
+        thumb_el = a.select_one("img.cover")
+        thumb = None
+        if thumb_el:
+            thumb = thumb_el.get("src") or thumb_el.get("data-src")
+        views_el = a.select_one(".views p, .views")
+        views = views_el.get_text(strip=True) if views_el else None
+        duration_el = a.select_one(".ep-time p, .ep-time")
+        duration = duration_el.get_text(strip=True) if duration_el else None
+        items.append({
+            "url": f"https://oppai.stream/watch/{slug}",
+            "title": title,
+            "thumbnail_url": thumb,
+            "duration": duration,
+            "views": views,
+            "upload_date": None,
+            "uploader_name": None,
+            "tags": None,
+        })
+    return items
 
 
 async def scrape(url: str) -> dict[str, Any]:
     watch_url = _normalize_watch_url(url)
     html = await fetch_html(watch_url)
     soup = BeautifulSoup(html, "lxml")
-    slug = parse_qs(urlparse(watch_url).query).get("e", [""])[0]
+    slug = _slug_from_watch_url(watch_url)
 
     title = _title_from_page(soup)
     thumbnail = _meta_content(soup, prop="og:image")
-    if not thumbnail and soup.find("video", id="episode"):
-        thumbnail = soup.find("video", id="episode").get("poster")
+    if not thumbnail:
+        video_poster = soup.find("video", id="episode")
+        if video_poster:
+            thumbnail = video_poster.get("poster")
+    if not thumbnail:
+        video_cover = soup.select_one(".video-cover img.cover")
+        if video_cover:
+            thumbnail = video_cover.get("src")
 
     description = _description_from_page(soup)
     tags = _tags_from_page(soup)
-    uploader = _studio_from_page(soup)
+    studio = _studio_from_page(soup)
 
     streams, default_url = _extract_streams(html, soup)
+
+    jsonld_m = re.search(r'"uploadDate"\s*:\s*"([^"]+)"', html)
+    upload_date = jsonld_m.group(1) if jsonld_m else None
+    duration_m = re.search(r'"duration"\s*:\s*"PT(\d+)M(\d+)S"', html)
+    duration = None
+    if duration_m:
+        duration = f"{duration_m.group(1)}:{duration_m.group(2)}"
+
     video_data = {
         "streams": streams,
         "default": default_url,
@@ -400,10 +467,10 @@ async def scrape(url: str) -> dict[str, Any]:
         "title": title,
         "description": description,
         "thumbnail_url": thumbnail,
-        "duration": None,
+        "duration": duration,
         "views": None,
-        "upload_date": None,
-        "uploader_name": uploader,
+        "upload_date": upload_date,
+        "uploader_name": studio,
         "category": None,
         "tags": tags,
         "video": video_data,
@@ -411,75 +478,41 @@ async def scrape(url: str) -> dict[str, Any]:
     }
 
 
-def _parse_list_html(fragment: str) -> list[dict[str, Any]]:
-    soup = BeautifulSoup(fragment, "lxml")
-    items: list[dict[str, Any]] = []
-    seen: set[str] = set()
-    for grid in soup.select("div.episode-shown"):
-        link = grid.select_one("a[href*='watch?e=']")
-        if not link:
-            continue
-        href = link.get("href") or ""
-        q = parse_qs(urlparse(href).query)
-        slug = (q.get("e") or [None])[0]
-        if not slug or slug in seen:
-            continue
-        seen.add(slug)
-        name = (grid.get("name") or "").strip()
-        ep = (grid.get("ep") or "").strip()
-        title = f"{name} {ep}".strip() or slug.replace("-", " ")
-        thumb_el = grid.select_one("img.cover-img-in")
-        thumb = None
-        if thumb_el:
-            thumb = thumb_el.get("original") or thumb_el.get("src")
-
-        views = None
-        stat_heads = grid.select(".stats-flex .stats-in h6.gray")
-        if stat_heads:
-            views = stat_heads[0].get_text(strip=True)
-
-        tags_raw = grid.get("tags")
-        tags = [t.strip() for t in tags_raw.split(",")] if tags_raw else None
-
-        watch = href if href.startswith("http") else f"{BASE}{href if href.startswith('/') else '/' + href}"
-        items.append(
-            {
-                "url": _normalize_watch_url(watch),
-                "title": title,
-                "thumbnail_url": thumb,
-                "duration": None,
-                "views": views,
-                "upload_date": None,
-                "uploader_name": None,
-                "tags": tags,
-            }
-        )
-    return items
-
-
 async def list_videos(base_url: str, page: int = 1, limit: int = 100) -> list[dict[str, Any]]:
     page = max(1, page)
     limit = min(max(1, limit), 100)
-    browse_api = _browse_search_api_url(base_url, page, limit)
-    if browse_api:
-        html = await fetch_html(browse_api)
-        return _parse_list_html(html)
-    category_url = _category_browse_url(base_url, page, limit)
-    if category_url:
-        html = await fetch_html(category_url)
+
+    post_data = _browse_search_post_data(base_url, page, limit)
+    if post_data:
+        html = await fetch_html(SEARCH_API, method="POST", data=post_data)
         return _parse_list_html(html)
 
-    offset = (page - 1) * limit
-    section = _results_section_key(base_url or "")
+    p = urlparse(base_url or "")
+    path = p.path.lower().strip("/")
 
-    params = {
-        "sc": section,
-        "am": str(limit),
-        "of": str(offset),
-        "sts": "1",
-        "ibt": "0",
+    if path.startswith("category/") or path.startswith("studio/"):
+        slug = path.split("/", 1)[1]
+        post_data = {
+            "text": "",
+            "tags": slug if path.startswith("category/") else "",
+            "blacklist": "",
+            "studios": slug if path.startswith("studio/") else "",
+            "order": "recent",
+            "limit": str(limit),
+            "page": str(page),
+            "classes": "smaller-episode-gap",
+            "character_filters": "{}",
+        }
+        html = await fetch_html(SEARCH_API, method="POST", data=post_data)
+        return _parse_list_html(html)
+
+    section = _results_section_key(base_url)
+    section_to_url = {
+        "views": f"{BASE}/popular",
+        "recent": f"{BASE}/new-releases",
+        "random": f"{BASE}/new-releases",
+        "uploaded": f"{BASE}/new-releases",
     }
-    q = urlencode(params)
-    url = f"{RESULTS_API}?{q}"
-    html = await fetch_html(url)
+    listing_url = section_to_url.get(section, f"{BASE}/new-releases")
+    html = await fetch_html(listing_url)
     return _parse_list_html(html)
